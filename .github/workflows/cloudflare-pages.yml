@@ -9,7 +9,12 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write # Izin yang diperlukan untuk deployment Pages
+    name: Deploy to Cloudflare Pages
     environment: production # Opsional: Mengaitkan dengan environment GitHub, baik untuk visibility maupun secret management
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4 # Mengambil kode dari repositori GitHub
@@ -17,25 +22,35 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3 # Mengatur pnpm
         with:
-          version: 10 # <--- UBAH INI ke versi utama pnpm Anda (10)
+          version: 10 # Pastikan versi ini sesuai dengan versi pnpm Anda (10.x.x)
 
       - name: Setup Node.js
         uses: actions/setup-node@v4 # Mengatur lingkungan Node.js
         with:
-          node-version: '20' # <--- PASTIKAN INI SESUAI dengan v20.19.2 Anda (v20)
+          node-version: '20' # Pastikan versi ini sesuai dengan v20.19.2 Anda (v20)
           cache: 'pnpm' # Mengaktifkan caching untuk pnpm dependencies agar build lebih cepat
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile # Menginstal semua dependensi proyek Anda
 
-      - name: Build Next.js Project
-        run: pnpm build # Menjalankan perintah build Next.js Anda
+      # Menjalankan skrip 'pages:build' dari package.json Anda
+      # Ini akan menjalankan 'npx @cloudflare/next-on-pages'
+      # dan menghasilkan output yang siap deploy di `.vercel/output/`
+      - name: Build Next.js Project for Cloudflare Pages
+        run: pnpm pages:build
         env:
           NODE_ENV: production
 
+      # Langkah Deploy menggunakan cloudflare/wrangler-action
+      # Ini akan mengambil output dari langkah build sebelumnya (`.vercel/output/`)
+      # dan mendeploy-nya ke Cloudflare Pages.
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3 # Menggunakan GitHub Action resmi dari Cloudflare
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: 'pages deploy .next --project-name portofolio-nextjs --branch main --production'
+          # Direktori output dari `npx @cloudflare/next-on-pages` adalah `.vercel/output/`
+          command: 'pages deploy .vercel/output --project-name muammar --branch main'
+          # gitHubToken tidak selalu diperlukan untuk `pages deploy` kecuali untuk fitur khusus
+          # seperti preview URL di Pull Request, tetapi tidak ada salahnya disertakan jika Anda ingin fitur tersebut.
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
