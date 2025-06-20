@@ -17,25 +17,28 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3 # Mengatur pnpm
         with:
-          version: 10 # <--- UBAH INI ke versi utama pnpm Anda (10)
+          version: 10 # Pastikan versi ini sesuai dengan versi pnpm Anda (10.x.x)
 
       - name: Setup Node.js
         uses: actions/setup-node@v4 # Mengatur lingkungan Node.js
         with:
-          node-version: '20' # <--- PASTIKAN INI SESUAI dengan v20.19.2 Anda (v20)
+          node-version: '20' # Pastikan versi ini sesuai dengan versi Node.js Anda (v20.x.x)
           cache: 'pnpm' # Mengaktifkan caching untuk pnpm dependencies agar build lebih cepat
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile # Menginstal semua dependensi proyek Anda
 
-      - name: Build Next.js Project
-        run: pnpm build # Menjalankan perintah build Next.js Anda
-        env:
-          NODE_ENV: production
-
-      - name: Deploy to Cloudflare Pages
+      # Menggunakan cloudflare/wrangler-action untuk menjalankan keseluruhan perintah 'deploy'
+      # Ini akan menjalankan "pnpm pages:build && wrangler pages deploy"
+      # dan secara otomatis meneruskan CLOUDFLARE_API_TOKEN dan CLOUDFLARE_ACCOUNT_ID
+      - name: Run Full Cloudflare Pages Deployment
         uses: cloudflare/wrangler-action@v3 # Menggunakan GitHub Action resmi dari Cloudflare
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: 'pages deploy .next --project-name portofolio-nextjs --branch main'
+          # Kita akan menjalankan script 'deploy' penuh yang ada di package.json Anda
+          # Script 'deploy' sudah memanggil 'pnpm pages:build' lalu 'wrangler pages deploy'
+          command: 'pnpm deploy'
+        env:
+          NODE_ENV: production # Pastikan Next.js build berjalan dalam mode produksi
+
