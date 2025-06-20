@@ -50,7 +50,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           # Direktori output dari `npx @cloudflare/next-on-pages` adalah `.vercel/output/`
-          command: 'pages deploy .vercel/output --project-name portofolio-nextjs --branch main'
+          command: 'pages deploy .vercel/output --project-name muammar --branch main'
           # gitHubToken tidak selalu diperlukan untuk `pages deploy` kecuali untuk fitur khusus
           # seperti preview URL di Pull Request, tetapi tidak ada salahnya disertakan jika Anda ingin fitur tersebut.
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
