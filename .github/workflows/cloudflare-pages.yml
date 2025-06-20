@@ -1,0 +1,41 @@
+name: Deploy Portofolio Next.js to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main # Ini akan memicu workflow setiap push ke branch 'main'
+  workflow_dispatch: # Memungkinkan Anda memicu deployment secara manual dari GitHub UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production # Opsional: Mengaitkan dengan environment GitHub, baik untuk visibility maupun secret management
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Mengambil kode dari repositori GitHub
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3 # Mengatur pnpm
+        with:
+          version: 10 # <--- UBAH INI ke versi utama pnpm Anda (10)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4 # Mengatur lingkungan Node.js
+        with:
+          node-version: '20' # <--- PASTIKAN INI SESUAI dengan v20.19.2 Anda (v20)
+          cache: 'pnpm' # Mengaktifkan caching untuk pnpm dependencies agar build lebih cepat
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile # Menginstal semua dependensi proyek Anda
+
+      - name: Build Next.js Project
+        run: pnpm build # Menjalankan perintah build Next.js Anda
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3 # Menggunakan GitHub Action resmi dari Cloudflare
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: 'pages deploy .next --project-name portofolio-nextjs --branch main --production'
