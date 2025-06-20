@@ -32,7 +32,7 @@ jobs:
           cache: 'npm' # Mengaktifkan caching untuk npm dependencies, mencari package-lock.json
 
       - name: Install Dependencies
-        run: npm install # Menginstal semua dependensi proyek Anda menggunakan npm
+        run: npm install --legacy-peer-deps # Menginstal semua dependensi proyek Anda menggunakan npm
 
       # Menjalankan skrip 'pages:build' dari package.json Anda
       # Ini akan menjalankan 'npx @cloudflare/next-on-pages'
