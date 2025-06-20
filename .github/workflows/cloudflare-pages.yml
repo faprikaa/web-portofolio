@@ -38,7 +38,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           # Kita akan menjalankan script 'deploy' penuh yang ada di package.json Anda
           # Script 'deploy' sudah memanggil 'pnpm pages:build' lalu 'wrangler pages deploy'
-          command: 'pnpm deploy'
+          command: pnpm run deploy
         env:
           NODE_ENV: production # Pastikan Next.js build berjalan dalam mode produksi
 
