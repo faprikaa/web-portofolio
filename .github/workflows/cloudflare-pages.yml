@@ -19,25 +19,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4 # Mengambil kode dari repositori GitHub
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3 # Mengatur pnpm
-        with:
-          version: 10 # Pastikan versi ini sesuai dengan versi pnpm Anda (10.x.x)
+      # --- PERUBAHAN DI SINI: Menghapus pnpm/action-setup karena kita menggunakan npm. ---
+      # - name: Setup pnpm
+      #   uses: pnpm/action-setup@v3
+      #   with:
+      #     version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4 # Mengatur lingkungan Node.js
         with:
           node-version: '20' # Pastikan versi ini sesuai dengan v20.19.2 Anda (v20)
-          cache: 'pnpm' # Mengaktifkan caching untuk pnpm dependencies agar build lebih cepat
+          cache: 'npm' # Mengaktifkan caching untuk npm dependencies, mencari package-lock.json
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile # Menginstal semua dependensi proyek Anda
+        run: npm install --legacy-peer-deps # Menginstal semua dependensi proyek Anda menggunakan npm
 
       # Menjalankan skrip 'pages:build' dari package.json Anda
       # Ini akan menjalankan 'npx @cloudflare/next-on-pages'
       # dan menghasilkan output yang siap deploy di `.vercel/output/`
       - name: Build Next.js Project for Cloudflare Pages
-        run: pnpm pages:build
+        run: npm run pages:build # Menjalankan skrip 'pages:build' menggunakan npm
         env:
           NODE_ENV: production
 
@@ -51,6 +52,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           # Direktori output dari `npx @cloudflare/next-on-pages` adalah `.vercel/output/`
           command: 'pages deploy .vercel/output --project-name muammar --branch main'
-          # gitHubToken tidak selalu diperlukan untuk `pages deploy` kecuali untuk fitur khusus
-          # seperti preview URL di Pull Request, tetapi tidak ada salahnya disertakan jika Anda ingin fitur tersebut.
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
