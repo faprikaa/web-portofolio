@@ -51,5 +51,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           # Direktori output dari `npx @cloudflare/next-on-pages` adalah `.vercel/output/`
-          command: 'pages deploy .vercel/output --project-name muammar --branch main'
+          command: 'pages deploy .vercel/output/static --project-name porto-ga --branch main'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
