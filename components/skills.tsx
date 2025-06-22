@@ -6,37 +6,41 @@ export function Skills() {
     {
       title: "Frontend",
       skills: [
+        "HTML",
+        "CSS",
+        "Tailwind",
         "React",
-        "Next.js",
-        "TypeScript",
-        "JavaScript",
-        "HTML5",
-        "CSS3",
-        "Tailwind CSS",
-        "Sass",
-        "Vue.js",
-        "Angular",
+        "Vue",
+        "jQuery",
+        "Bootstrap",
+        "Material UI",
       ],
     },
     {
       title: "Backend",
-      skills: ["Node.js", "Express.js", "Python", "Django", "FastAPI", "PHP", "Laravel", "Ruby on Rails"],
+      skills: [
+        "Laravel",
+        "Node.js",
+        "Express",
+        "Python",
+        "Django",
+      ],
     },
     {
       title: "Database",
-      skills: ["PostgreSQL", "MongoDB", "MySQL", "Redis", "Supabase", "Firebase", "Prisma", "Mongoose"],
+      skills: ["PostgreSQL", "Eloquent", "MySQL", "Redis", "Supabase", "Firebase", "Prisma", "Mongoose"],
     },
     {
       title: "Cloud & DevOps",
-      skills: ["AWS", "Vercel", "Docker", "Kubernetes", "CI/CD", "GitHub Actions", "Nginx", "Linux"],
+      skills: ["GCP", "DO", "AWS", "Vercel", "Docker", "Cloud Run", "Cloudflare", "CI/CD", "GitHub Actions", "Nginx", "Linux"],
     },
     {
-      title: "Mobile",
-      skills: ["React Native", "Expo", "Flutter", "PWA", "Ionic", "Cordova"],
+      title: "Native",
+      skills: ["Kotlin", "Tauri", "GDevelop", "C++", "C#", "Java"],
     },
     {
       title: "Tools & Others",
-      skills: ["Git", "Webpack", "Vite", "Jest", "Cypress", "Figma", "Postman", "GraphQL", "REST APIs"],
+      skills: ["Git","Figma", "Postman", "REST APIs", "Swagger"],
     },
   ]
 

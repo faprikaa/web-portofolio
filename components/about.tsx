@@ -5,25 +5,30 @@ export function About() {
   const highlights = [
     {
       icon: <Code className="h-8 w-8" />,
-      title: "Frontend Development",
-      description: "React, Next.js, TypeScript, Tailwind CSS",
+      title: "Fullstack Development",
+      description:
+        "Building web apps using Laravel, Node.js, Vue, and React from backend to frontend.",
     },
     {
       icon: <Database className="h-8 w-8" />,
-      title: "Backend Development",
-      description: "Node.js, Python, PostgreSQL, MongoDB",
+      title: "DevOps & Deployment",
+      description:
+        "Setting up servers, CI/CD, and deploying with Docker, Cloud Run, or Cloudflare.",
     },
     {
       icon: <Globe className="h-8 w-8" />,
-      title: "Full Stack Solutions",
-      description: "End-to-end application development",
+      title: "System Integration",
+      description:
+        "Designing APIs, connecting services, and optimizing databases.",
     },
     {
       icon: <Smartphone className="h-8 w-8" />,
       title: "Mobile Development",
-      description: "React Native, Progressive Web Apps",
+      description:
+        "Creating apps with Kotlin, and Tauri for multiple platforms.",
     },
-  ]
+  ];
+  
 
   return (
     <section id="about" className="py-16 bg-gradient-to-b from-muted/30 to-muted/10">
@@ -32,25 +37,20 @@ export function About() {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">About Me</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              I'm a passionate fullstack developer with 5+ years of experience building scalable web applications and
-              mobile solutions.
-            </p>
+            A fullstack developer from Yogyakarta with over 3 years of experience in building scalable and user-friendly web applications — from internal dashboards to public-facing platforms.            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
               <h3 className="text-2xl font-semibold mb-4">My Journey</h3>
               <p className="text-muted-foreground mb-4">
-                Started as a frontend developer and evolved into a fullstack engineer. I love solving complex problems
-                and turning ideas into reality through code.
+              My journey began with curiosity about how apps work. Over time, that curiosity turned into a strong passion for software development — from backend systems to sleek frontends.
               </p>
               <p className="text-muted-foreground mb-4">
-                My expertise spans across modern web technologies, cloud platforms, and mobile development. I'm always
-                eager to learn new technologies and best practices.
+              I love building things from scratch, writing clean code, and solving real problems with elegant, maintainable solutions.
               </p>
               <p className="text-muted-foreground">
-                When I'm not coding, you can find me contributing to open source projects, writing technical blogs, or
-                exploring the latest in tech.
+                When I'm not coding, you can find me creating new projects, writing blogs, or exploring the latest in tech.
               </p>
             </div>
             <div className="relative">

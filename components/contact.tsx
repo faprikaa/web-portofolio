@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, Phone, MapPin, Send } from "lucide-react"
+import { Mail, Phone, MapPin, Send, Bot } from "lucide-react"
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -34,20 +34,20 @@ export function Contact() {
     {
       icon: <Mail className="h-5 w-5" />,
       title: "Email",
-      value: "hello@developer.com",
-      href: "mailto:hello@developer.com",
+      value: "hello@amaw.eu.org",
+      href: "mailto:hello@amaw.eu.org",
     },
     {
-      icon: <Phone className="h-5 w-5" />,
-      title: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      icon: <Bot className="h-5 w-5" />,
+      title: "Discord",
+      value: "@suwun",
+      href: "https://discord.com/channels/@me/555238901527085056",
     },
     {
       icon: <MapPin className="h-5 w-5" />,
       title: "Location",
-      value: "San Francisco, CA",
-      href: "#",
+      value: "Yogyakarta, Indonesia",
+      href: "https://www.google.com/maps/place/Yogyakarta,+Indonesia/@-7.7955988,110.369538,12z/data=!3m1!4b1!4m6!3m5!1s0x2e7a58a08625da1b:0xf8e44e454c758ce3!8m2!3d-7.7955988!4d110.369538!16zL20vMDE3N2Zj?entry=ttu&g_ep=EgoyMDI1MDIyMi4wIKXMDSoASAFQAw%3D%3D",
     },
   ]
 
