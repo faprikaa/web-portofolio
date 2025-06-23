@@ -6,6 +6,7 @@ import { Experience } from "@/components/experience"
 import { Chatbot } from "@/components/chatbot"
 import { Contact } from "@/components/contact"
 import { Navigation } from "@/components/navigation"
+import { InfiniteProjects } from "@/components/infinite-projects"
 
 export default function Portfolio() {
   return (
@@ -16,6 +17,7 @@ export default function Portfolio() {
         <About />
         <Skills />
         <Projects />
+        <InfiniteProjects />
         <Experience />
         <Chatbot />
         <Contact />
