@@ -47,7 +47,7 @@ export function Contact() {
       icon: <MapPin className="h-5 w-5" />,
       title: "Location",
       value: "Yogyakarta, Indonesia",
-      href: "https://www.google.com/maps/place/Yogyakarta,+Indonesia/@-7.7955988,110.369538,12z/data=!3m1!4b1!4m6!3m5!1s0x2e7a58a08625da1b:0xf8e44e454c758ce3!8m2!3d-7.7955988!4d110.369538!16zL20vMDE3N2Zj?entry=ttu&g_ep=EgoyMDI1MDIyMi4wIKXMDSoASAFQAw%3D%3D",
+      href: "https://www.google.com/maps/place/Yogyakarta,+Indonesia/@-7.7955988,110.369538,12z/",
     },
   ]
 

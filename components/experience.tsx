@@ -1,9 +1,31 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+"use client"
+
+import { useState } from "react"
+
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, MapPin } from "lucide-react"
+import AnimatedList from "./animated-list"
+
+interface Experience {
+  title: string
+  company: string
+  location: string
+  period: string
+  description: string
+  technologies: string[]
+}
 
 export function Experience() {
   const experiences = [
+    {
+      title: "Intern Fullstack Programmer",
+      company: "PT Medika Digital Nusantara",
+      location: "Yogyakarta, Indonesia",
+      period: "Jun 2025 – Aug 2025",
+      description:
+      "Contributed to the development of a human resource web application as a fullstack developer. Collaborated in a 5-person team and focused on adding new features, fixing bugs, and managing Git workflows with proper branching. Built a complex custom document template generation feature. Participated in CI/CD-based deployments and coordinated with QA for testing assignments.",
+      technologies: ["Laravel", "Bootstrap 5", "MySQL", "Git", "CI/CD", "HR System"],
+    },
     {
       title: "Intern Fullstack Programmer",
       company: "Horus Technology",
@@ -50,14 +72,22 @@ export function Experience() {
       technologies: ["ESP32", "MQTT", "C++", "HTTP", "AI Integration", "Real-time Systems"],
     },
   ];
-  
-  
-  
+
+  // Convert experiences to formatted strings for AnimatedList
+  const experienceItems = experiences.map((exp) => {
+    return `${exp.title} • ${exp.company} • ${exp.period}`
+  })
+
+  const [selectedExperience, setSelectedExperience] = useState<Experience | null>(experiences[0])
+
+  const handleItemSelect = (item: string, index: number) => {
+    setSelectedExperience(experiences[index])
+  }
 
   return (
     <section id="experience" className="py-16 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Work Experience</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -65,46 +95,61 @@ export function Experience() {
             </p>
           </div>
 
-          <div className="space-y-6">
-            {experiences.map((exp, index) => (
-              <Card
-                key={index}
-                className="hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-card to-card/80 border-primary/10"
-              >
-                <CardHeader>
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <div>
-                      <CardTitle className="text-xl">{exp.title}</CardTitle>
-                      <CardDescription className="text-lg font-medium text-primary">{exp.company}</CardDescription>
-                    </div>
-                    <div className="flex flex-col md:items-end gap-1">
-                      <div className="flex items-center text-sm text-muted-foreground">
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Left Side - Animated List */}
+            <div>
+              <h3 className="text-xl font-semibold mb-6">Experience Timeline </h3>
+              <AnimatedList
+                items={experienceItems}
+                onItemSelect={handleItemSelect}
+                showGradients={true}
+                enableArrowNavigation={true}
+                displayScrollbar={false}
+                initialSelectedIndex={0}
+                className="bg-gradient-to-br from-card/50 to-card/30 backdrop-blur-sm border border-primary/10 rounded-lg p-2"
+                itemClassName="transition-all duration-300"
+              />
+            </div>
+
+            {/* Right Side - Experience Details */}
+            <div className="space-y-6">
+            <p className="text-sm text-muted-foreground mb-6">Scroll to see more details or click on the timeline</p>
+              {selectedExperience && (
+                <div className="bg-gradient-to-r from-card to-card/80 border border-primary/10 rounded-lg p-6 shadow-lg">
+                  <div className="mb-4">
+                    <h3 className="text-2xl font-bold text-primary mb-2">{selectedExperience.title}</h3>
+                    <h4 className="text-xl font-semibold mb-3">{selectedExperience.company}</h4>
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4">
+                      <div className="flex items-center">
                         <CalendarDays className="h-4 w-4 mr-1" />
-                        {exp.period}
+                        {selectedExperience.period}
                       </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
+                      <div className="flex items-center">
                         <MapPin className="h-4 w-4 mr-1" />
-                        {exp.location}
+                        {selectedExperience.location}
                       </div>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">{exp.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map((tech, techIndex) => (
-                      <Badge
-                        key={techIndex}
-                        variant="secondary"
-                        className="hover:bg-primary hover:text-primary-foreground transition-colors"
-                      >
-                        {tech}
-                      </Badge>
-                    ))}
+
+                  <p className="text-muted-foreground mb-6 leading-relaxed">{selectedExperience.description}</p>
+
+                  <div>
+                    <h5 className="font-semibold mb-3">Technologies Used:</h5>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedExperience.technologies.map((tech, techIndex) => (
+                        <Badge
+                          key={techIndex}
+                          variant="secondary"
+                          className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

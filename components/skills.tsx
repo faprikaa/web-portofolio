@@ -45,7 +45,7 @@ export function Skills() {
   ]
 
   return (
-    <section id="skills" className="py-16 bg-background">
+    <section id="skills" className="py-16 bg-background min-h-screen">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">

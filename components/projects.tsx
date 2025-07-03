@@ -1,12 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ExternalLink, Github, X, Calendar, Users, Zap } from "lucide-react"
+import { ExternalLink, Github, X, Calendar, Users, Zap, Turtle, Rabbit } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import ElasticSlider from "./elastic-slider"
 
 interface Project {
   title: string
@@ -25,7 +28,17 @@ interface Project {
 
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
+  const [dragStarted, setDragStarted] = useState(false)
+  const [scrollSpeed, setScrollSpeed] = useState(1)
   const { toast } = useToast()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<number>()
+  const scrollPositionRef = useRef(0)
+  const [isHovering, setIsHovering] = useState(false)
 
   const handleViewCode = (projectTitle: string) => {
     const messages = [
@@ -238,64 +251,333 @@ export function Projects() {
     },
   ]
 
+  // Create seamless infinite loop by tripling projects
+  const infiniteProjects = [...projects, ...projects, ...projects]
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (!isAutoPlaying || isDragging || isHovering) return
+
+    const animate = () => {
+      if (scrollRef.current) {
+        scrollPositionRef.current += scrollSpeed * 0.5
+
+        const container = scrollRef.current
+        const cardWidth = 320 + 24 // card width + gap
+        const totalWidth = projects.length * cardWidth
+
+        // Reset position when we've scrolled through one complete set
+        if (scrollPositionRef.current >= totalWidth) {
+          scrollPositionRef.current = 0
+        }
+
+        container.style.transform = `translateX(-${scrollPositionRef.current}px)`
+      }
+
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [isAutoPlaying, scrollSpeed, projects.length, isDragging, isHovering])
+
+  // Mouse drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Check if the target is a clickable element
+    const target = e.target as HTMLElement
+    if (
+      target.closest("button") ||
+      target.closest('[data-clickable="true"]') ||
+      target.tagName === "BUTTON" ||
+      target.closest(".clickable-area") ||
+      target.closest(".speed-control")
+    ) {
+      return
+    }
+
+    if (!scrollRef.current) return
+
+    setIsDragging(true)
+    setDragStarted(false)
+    setIsAutoPlaying(false) // Pause auto-play when dragging
+    setStartX(e.pageX - scrollRef.current.offsetLeft)
+    setScrollLeft(scrollPositionRef.current)
+
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = "grabbing"
+      scrollRef.current.style.userSelect = "none"
+    }
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return
+
+    e.preventDefault()
+    setDragStarted(true)
+
+    const x = e.pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX) * 2 // Multiply by 2 for faster scrolling
+    const newPosition = scrollLeft - walk
+
+    // Handle infinite scroll boundaries
+    const cardWidth = 320 + 24
+    const totalWidth = projects.length * cardWidth
+
+    if (newPosition < 0) {
+      scrollPositionRef.current = totalWidth + newPosition
+    } else if (newPosition >= totalWidth) {
+      scrollPositionRef.current = newPosition - totalWidth
+    } else {
+      scrollPositionRef.current = newPosition
+    }
+
+    scrollRef.current.style.transform = `translateX(-${scrollPositionRef.current}px)`
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = "grab"
+      scrollRef.current.style.userSelect = "auto"
+    }
+    // Resume auto-play after a short delay
+    setTimeout(() => {
+      setIsAutoPlaying(true)
+    }, 2000) // Resume after 2 seconds
+  }
+
+  const handleMouseLeave = (e: React.MouseEvent) => {
+    if (isDragging) {
+      setIsDragging(false)
+      if (scrollRef.current) {
+        scrollRef.current.style.cursor = "grab"
+        scrollRef.current.style.userSelect = "auto"
+      }
+      // Resume auto-play after a short delay
+      setTimeout(() => {
+        setIsAutoPlaying(true)
+      }, 2000)
+    }
+  }
+
+  // Touch handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Check if the target is a clickable element
+    const target = e.target as HTMLElement
+    if (
+      target.closest("button") ||
+      target.closest('[data-clickable="true"]') ||
+      target.tagName === "BUTTON" ||
+      target.closest(".clickable-area") ||
+      target.closest(".speed-control")
+    ) {
+      return
+    }
+
+    if (!scrollRef.current) return
+
+    setIsDragging(true)
+    setDragStarted(false)
+    setIsAutoPlaying(false) // Pause auto-play when dragging
+    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft)
+    setScrollLeft(scrollPositionRef.current)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !scrollRef.current) return
+
+    setDragStarted(true)
+
+    const x = e.touches[0].pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX) * 2
+    const newPosition = scrollLeft - walk
+
+    const cardWidth = 320 + 24
+    const totalWidth = projects.length * cardWidth
+
+    if (newPosition < 0) {
+      scrollPositionRef.current = totalWidth + newPosition
+    } else if (newPosition >= totalWidth) {
+      scrollPositionRef.current = newPosition - totalWidth
+    } else {
+      scrollPositionRef.current = newPosition
+    }
+
+    scrollRef.current.style.transform = `translateX(-${scrollPositionRef.current}px)`
+  }
+
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+    // Resume auto-play after a short delay
+    setTimeout(() => {
+      setIsAutoPlaying(true)
+    }, 2000)
+  }
+
+  const handleCardClick = (project: Project, e: React.MouseEvent) => {
+    // Only open modal if we haven't dragged
+    if (!dragStarted) {
+      setSelectedProject(project)
+    }
+  }
+
+  const handleSpeedChange = useCallback((value: number) => {
+    setScrollSpeed(value)
+  }, [])
+
   return (
     <section id="projects" className="py-16 bg-gradient-to-b from-primary/5 to-primary/10">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A showcase of my recent work and personal projects
-            </p>
-          </div>
+          <div className="text-center mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Featured Projects</h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 bg-background/90 backdrop-blur-sm border-primary/20"
-              >
-                <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
+            {/* Description and Speed Control Side by Side */}
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 max-w-4xl mx-auto">
+              {/* Description */}
+              <div className="flex-1 text-center lg:text-left">
+                <p className="text-lg text-muted-foreground text-right">A showcase of my recent work and personal projects</p>
+              </div>
+
+              {/* Speed Control */}
+              <div className="flex items-center gap-3 bg-gradient-to-r from-primary/5 via-primary/8 to-primary/5 backdrop-blur-sm border border-primary/10 rounded-full px-4 py-2 speed-control right-0">
+                <Turtle className="h-4 w-4 text-muted-foreground/70" />
+                <div className="w-20 sm:w-24">
+                  <ElasticSlider
+                    defaultValue={scrollSpeed}
+                    startingValue={0.1}
+                    maxValue={5}
+                    stepSize={0.1}
+                    isStepped={true}
+                    onValueChange={handleSpeedChange}
+                    leftIcon={<></>}
+                    rightIcon={<></>}
+                    className="w-full"
                   />
                 </div>
-                <CardHeader>
-                  <CardTitle className="text-xl">{project.title}</CardTitle>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech, techIndex) => (
-                      <Badge
-                        key={techIndex}
-                        variant="outline"
-                        className="text-xs border-primary/30 hover:bg-primary hover:text-primary-foreground transition-colors"
+                <Rabbit className="h-4 w-4 text-muted-foreground/70" />
+              </div>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden px-8 py-6">
+            {/* Drag and scroll container */}
+            <div
+              className="overflow-hidden px-4"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={(e) => {
+                setIsHovering(false)
+                handleMouseLeave(e)
+              }}
+            >
+              <div
+                ref={scrollRef}
+                className="flex gap-6 transition-transform duration-300 ease-linear select-none"
+                style={{
+                  width: `${infiniteProjects.length * (320 + 24)}px`,
+                  cursor: isDragging ? "grabbing" : "grab",
+                }}
+              >
+                {infiniteProjects.map((project, index) => (
+                  <Card
+                    key={`${project.title}-${index}`}
+                    className="flex-none w-80 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 bg-background/90 backdrop-blur-sm border-primary/20 mx-2 my-4"
+                    style={{ cursor: isDragging ? "grabbing" : "grab" }}
+                  >
+                    {/* Non-clickable Image Area - Grabbable */}
+                    <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center cursor-grab">
+                      <img
+                        src={project.image || "/placeholder.svg"}
+                        alt={project.title}
+                        className="w-full h-full object-cover pointer-events-none"
+                        draggable={false}
+                      />
+                    </div>
+
+                    <CardHeader>
+                      {/* Clickable Title */}
+                      <CardTitle
+                        className="text-xl clickable-area cursor-pointer hover:text-primary transition-colors"
+                        onClick={(e) => handleCardClick(project, e)}
+                        data-clickable="true"
                       >
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex-1 hover:bg-primary hover:text-primary-foreground"
-                      onClick={() => handleViewCode(project.title)}
-                    >
-                      <Github className="h-4 w-4 mr-2" />
-                      Code
-                    </Button>
-                    <Button size="sm" className="flex-1 shadow-md" onClick={() => setSelectedProject(project)}>
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Detail
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        {project.title}
+                      </CardTitle>
+                      {/* Non-clickable Description */}
+                      <CardDescription className="cursor-grab">{project.description}</CardDescription>
+                    </CardHeader>
+
+                    <CardContent>
+                      {/* Non-clickable Technologies */}
+                      <div className="flex flex-wrap gap-2 mb-4 cursor-grab">
+                        {project.technologies.slice(0, 3).map((tech, techIndex) => (
+                          <Badge key={techIndex} variant="outline" className="text-xs border-primary/30 cursor-grab">
+                            {tech}
+                          </Badge>
+                        ))}
+                        {project.technologies.length > 3 && (
+                          <Badge variant="outline" className="text-xs border-primary/30 cursor-grab">
+                            +{project.technologies.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+
+                      {/* Clickable Buttons */}
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 hover:bg-primary hover:text-primary-foreground bg-transparent cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleViewCode(project.title)
+                          }}
+                        >
+                          <Github className="h-4 w-4 mr-2" />
+                          Code
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="flex-1 shadow-md cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setSelectedProject(project)
+                          }}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Detail
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Status indicator */}
+            <div className="flex justify-center mt-4">
+              <p className="text-sm text-muted-foreground/70">
+                {isDragging
+                  ? "Dragging..."
+                  : isHovering
+                    ? "Auto-scroll paused (hovering) • Click title to view details"
+                    : isAutoPlaying
+                      ? `Auto-scrolling at ${scrollSpeed.toFixed(1)}x speed • Hover to pause • Drag to pause • Click title to view details`
+                      : "Auto-scroll paused • Will resume in 2 seconds • Click title to view details"}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -383,7 +665,7 @@ export function Projects() {
                       <Github className="h-4 w-4 mr-2" />
                       View Code
                     </Button>
-                    <Button variant="outline" className="flex-1" asChild>
+                    <Button variant="outline" className="flex-1 bg-transparent" asChild>
                       <a href={selectedProject.live} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Live Demo

@@ -28,7 +28,6 @@ export function About() {
         "Creating apps with Kotlin, and Tauri for multiple platforms.",
     },
   ];
-  
 
   return (
     <section id="about" className="py-16 bg-gradient-to-b from-muted/30 to-muted/10">
@@ -37,25 +36,29 @@ export function About() {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">About Me</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A fullstack developer from Yogyakarta with over 3 years of experience in building scalable and user-friendly web applications — from internal dashboards to public-facing platforms.            </p>
+              A fullstack developer from Yogyakarta with over 3 years of experience in building scalable and user-friendly web applications —
+              from internal dashboards to public-facing platforms.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
               <h3 className="text-2xl font-semibold mb-4">My Journey</h3>
               <p className="text-muted-foreground mb-4">
-              My journey began with curiosity about how apps work. Over time, that curiosity turned into a strong passion for software development — from backend systems to sleek frontends.
+                My journey began with curiosity about how apps work. Over time, that curiosity turned into a strong passion for software development —
+                from backend systems to sleek frontends.
               </p>
               <p className="text-muted-foreground mb-4">
-              I love building things from scratch, writing clean code, and solving real problems with elegant, maintainable solutions.
+                My expertise spans across modern web technologies, cloud platforms, and mobile development.
+                I'm always eager to learn new technologies and best practices.
               </p>
               <p className="text-muted-foreground">
-                When I'm not coding, you can find me creating new projects, writing blogs, or exploring the latest in tech.
+                When I'm not coding, you can find me contributing to open source projects, writing technical blogs, or exploring the latest in tech.
               </p>
             </div>
-            <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 rounded-2xl flex items-center justify-center border border-primary/20 shadow-lg">
-                <div className="text-6xl">👨‍💻</div>
+            <div className="flex justify-center items-center">
+              <div className="w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 rounded-2xl flex items-center justify-center border border-primary/20 shadow-lg">
+                <div className="text-6xl sm:text-7xl lg:text-8xl">👨‍💻</div>
               </div>
             </div>
           </div>
