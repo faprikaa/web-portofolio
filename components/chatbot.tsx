@@ -143,7 +143,8 @@ export function Chatbot() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
-    
+    scrollToBottomAlign();
+    scrollToBottom();
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input,
