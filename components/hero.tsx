@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button"
 import { ArrowDown, Github, Linkedin, Mail } from "lucide-react"
 
 export function Hero() {
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById("projects");
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <section
       id="home"
@@ -20,10 +26,10 @@ export function Hero() {
             innovative solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="text-lg px-8 shadow-lg">
+            <Button size="lg" className="text-lg px-8 shadow-lg" onClick={() => scrollToProjects()}>
               View My Work
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 shadow-lg">
+            <Button size="lg" variant="outline" className="text-lg px-8 shadow-lg" onClick={() => window.open("/documents/Muammar_Mufid_Darmindra-resume1806.pdf", "_blank")}>
               Download CV
             </Button>
           </div>
@@ -32,6 +38,15 @@ export function Hero() {
               variant="ghost"
               size="icon"
               className="h-12 w-12 hover:bg-primary/10 hover:scale-110 transition-all"
+              onClick={() => window.open("https://career.toyota.co.id/profile/muammar-mufid-darmindra-tyruccd62nm0qu1s", "_blank")}
+            >
+              TMMIN<br/>Profile
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-12 w-12 hover:bg-primary/10 hover:scale-110 transition-all"
+              onClick={() => window.open("https://github.com/faprikaa", "_blank")}
             >
               <Github className="h-6 w-6" />
             </Button>
@@ -39,6 +54,7 @@ export function Hero() {
               variant="ghost"
               size="icon"
               className="h-12 w-12 hover:bg-primary/10 hover:scale-110 transition-all"
+              onClick={() => window.open("https://www.linkedin.com/in/muammar-mufid/", "_blank")}
             >
               <Linkedin className="h-6 w-6" />
             </Button>
@@ -46,6 +62,7 @@ export function Hero() {
               variant="ghost"
               size="icon"
               className="h-12 w-12 hover:bg-primary/10 hover:scale-110 transition-all"
+              onClick={() => window.open("mailto:muammarm28@gmail.com", "_blank")}
             >
               <Mail className="h-6 w-6" />
             </Button>
