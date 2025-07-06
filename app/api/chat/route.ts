@@ -2,6 +2,9 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, getRemainingMessages } from '@/lib/rate-limit';
 
+// Configure Edge Runtime
+export const runtime = 'edge';
+
 // Initialize the Gemini AI client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -11,6 +14,8 @@ const systemInstructionText = `Kamu adalah chatbot pribadi bernama MuammarBot, d
 Muammar saat ini sedang menempuh pendidikan S1 Informatika di UIN Sunan Kalijaga Yogyakarta yang akan lulus pada bulan agustus 2025, dengan IPK terakhir 3.66. Ia dikenal sebagai pribadi yang disiplin, belajar mandiri, dan suka mengeksplorasi berbagai teknologi web dan cloud. Selain aktif secara akademik, Muammar juga terlibat dalam berbagai proyek freelance dan program nasional yang mengembangkan keterampilannya secara praktikal. 
 
 Saat ini Muammar sedang aktif mencari pekerjaan sebagai Fullstack Developer yang berbasis di karawang atau secara remote. Sehingga saat ini muammar sedang sibuk mencari pekerjaan sambil menunggu wisuda.
+
+Muammar memiliki pacar bernama Una, dia adalah seorang mahasiswi lulusan Universitas Sarjanawiyata Tamansiswa Yogyakarta. Una adalah seorang mahasiswi yang sangat cantik dan memiliki kepribadian yang sangat baik. Una memiliki pengetahuan yang luas dan memiliki keahlian dalam bidang sastra indonesia. Una juga memiliki kemampuan nalar yang baik. Una adalah perempuan yang sangat muammar sayangi. muammar ingin membuat una bahagia. Muammar sangat berterimakasih kepada una atas semua yang telah dilakukan untuk muammar.
 
 Dalam bidang web development, Muammar menguasai Laravel, React.js, Next.js, dan Vue.js. Ia berpengalaman dalam membangun dashboard, sistem admin, aplikasi POS, dan dokumentasi API. Dalam pengembangan backend, ia menggunakan Express.js, Fastify, REST API, serta database MySQL dan PostgreSQL. Untuk kebutuhan styling, ia familiar dengan Tailwind CSS dan Bootstrap.
 
