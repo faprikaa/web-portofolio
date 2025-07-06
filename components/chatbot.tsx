@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, KeyboardEvent } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,6 +21,21 @@ interface Message {
 const COOKIE_NAME = 'muammar_chat_history';
 const COOKIE_EXPIRY = 7; // days
 
+// Hardcoded responses for when quota is exceeded
+const HARDCODED_RESPONSES = [
+  "Halo! Saya MuammarBot. Saat ini kuota API telah habis, tetapi saya masih bisa memberikan informasi umum tentang Muammar. Muammar adalah seorang fullstack developer dan cloud engineer dengan keahlian di Vue.js, Next.js, Laravel, dan deployment di cloud.",
+  
+  "Muammar memiliki pengalaman magang di Horus Technology dan PT Medika Digital Nusantara, mengembangkan berbagai aplikasi web dan sistem.",
+  
+  "Muammar saat ini sedang menempuh pendidikan S1 Informatika di UIN Sunan Kalijaga Yogyakarta dan akan lulus pada Agustus 2025.",
+  
+  "Anda dapat menghubungi Muammar melalui email di muamamrm28@gmail.com atau melihat portofolionya di https://muammar.pages.dev.",
+  
+  "Muammar pernah mengikuti program Bangkit Academy (Top 50 Capstone Nasional) dan Samsung Innovation Campus (Top 20 Nasional).",
+  
+  "Maaf, saya hanya dapat memberikan informasi terbatas karena kuota API telah habis. Silakan kembali besok untuk menggunakan chatbot dengan fitur lengkap."
+];
+
 export function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("")
@@ -30,6 +45,7 @@ export function Chatbot() {
   const [isLoading, setIsLoading] = useState(true);
   const boxMessageRef = useRef<HTMLDivElement>(null)
   const outerBoxMessageRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // Load messages from cookies and fetch remaining message count on initial render
   useEffect(() => {
@@ -116,37 +132,18 @@ export function Chatbot() {
     }
   };
 
-  useEffect(() => {
-    // Use a small timeout to ensure the DOM has updated
-    const timeoutId = setTimeout(() => {
-      // Don't scroll on initial render when isLoading is true
-      if (!isLoading) {
-        scrollToBottomAlign();
-        scrollToBottom();
-      }
-    }, 100);
-    
-    return () => clearTimeout(timeoutId);
-  }, [messages, isTyping, isLoading]);
+  // Handle Enter key press
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey && input.trim() && !isTyping && remainingMessages > 0 && !isLoading) {
+      e.preventDefault();
+      handleSubmit(e as unknown as React.FormEvent);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
     
-    // Check if user has reached the rate limit
-    if (remainingMessages <= 0) {
-      setIsError(true);
-      const errorMessage: Message = {
-        id: Date.now().toString(),
-        content: "Maaf, Anda telah mencapai batas penggunaan chatbot (15 pesan per hari). Silakan coba lagi besok.",
-        sender: "bot",
-        timestamp: new Date(),
-      };
-      
-      setMessages((prev) => [...prev, errorMessage]);
-      return;
-    }
-
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input,
@@ -155,9 +152,40 @@ export function Chatbot() {
     }
 
     setMessages((prev) => [...prev, userMessage])
+    setInput("")
+    
+    // Scroll to bottom when user sends a message
     scrollToBottomAlign();
     scrollToBottom();
-    setInput("")
+    
+    // Check if user has reached the rate limit
+    if (remainingMessages <= 0) {
+      // Use hardcoded response instead of showing error
+      const randomIndex = Math.floor(Math.random() * HARDCODED_RESPONSES.length);
+      const hardcodedResponse = HARDCODED_RESPONSES[randomIndex];
+      
+      setIsTyping(true);
+      
+      // Simulate typing delay for more natural feel
+      setTimeout(() => {
+        const botMessage: Message = {
+          id: Date.now().toString(),
+          content: hardcodedResponse,
+          sender: "bot",
+          timestamp: new Date(),
+        };
+        
+        setMessages((prev) => [...prev, botMessage]);
+        setIsTyping(false);
+        
+        // Scroll after bot responds
+        scrollToBottomAlign();
+        scrollToBottom();
+      }, 1500);
+      
+      return;
+    }
+
     setIsTyping(true)
     setIsError(false)
 
@@ -185,6 +213,10 @@ export function Chatbot() {
       setRemainingMessages(data.remaining);
       
       setMessages((prev) => [...prev, data.message]);
+      
+      // Scroll after bot responds
+      scrollToBottomAlign();
+      scrollToBottom();
     } catch (error) {
       console.error('Error getting chatbot response:', error);
       setIsError(true);
@@ -198,6 +230,10 @@ export function Chatbot() {
       };
       
       setMessages((prev) => [...prev, errorMessage]);
+      
+      // Scroll after error message
+      scrollToBottomAlign();
+      scrollToBottom();
     } finally {
       setIsTyping(false);
     }
@@ -219,6 +255,10 @@ export function Chatbot() {
     
     setIsTyping(true);
     setIsError(false);
+    
+    // Scroll when retrying
+    scrollToBottomAlign();
+    scrollToBottom();
     
     try {
       // Send the message to our API
@@ -247,6 +287,10 @@ export function Chatbot() {
         const messagesWithoutLastBot = newMessages.slice(0, -1);
         setMessages([...messagesWithoutLastBot, data.message]);
       }
+      
+      // Scroll after bot responds
+      scrollToBottomAlign();
+      scrollToBottom();
     } catch (error) {
       console.error('Error getting chatbot response:', error);
       setIsError(true);
@@ -260,6 +304,10 @@ export function Chatbot() {
       };
       
       setMessages((prev) => [...prev, errorMessage]);
+      
+      // Scroll after error message
+      scrollToBottomAlign();
+      scrollToBottom();
     } finally {
       setIsTyping(false);
     }
@@ -281,9 +329,9 @@ export function Chatbot() {
   ]
 
   const handleQuickQuestion = (question: string) => {
-    scrollToBottomAlign();
-    scrollToBottom();
-    setInput(question)
+    setInput(question);
+    // Focus the input field after selecting a quick question
+    inputRef.current?.focus();
   }
 
   const formatTime = (timestamp: Date | string) => {
@@ -481,18 +529,20 @@ export function Chatbot() {
               <div className="space-y-3">
                 <form onSubmit={handleSubmit} className="flex gap-3">
                   <Input
+                    ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyPress}
                     placeholder="Tanyakan tentang Muammar..."
                     className="flex-1 h-12 text-base bg-background/80 border-primary/30 focus:border-primary"
-                    disabled={isTyping || remainingMessages <= 0 || isLoading}
+                    disabled={isTyping || isLoading}
                   />
                   {isError ? (
                     <Button 
                       type="button" 
                       size="lg" 
                       onClick={handleRetry}
-                      disabled={isTyping || remainingMessages <= 0 || isLoading} 
+                      disabled={isTyping || isLoading} 
                       className="shadow-lg bg-amber-500 hover:bg-amber-600"
                     >
                       <RefreshCw className="h-4 w-4" />
@@ -501,7 +551,7 @@ export function Chatbot() {
                     <Button 
                       type="submit" 
                       size="lg" 
-                      disabled={isTyping || !input.trim() || remainingMessages <= 0 || isLoading} 
+                      disabled={isTyping || !input.trim() || isLoading} 
                       className="shadow-lg"
                     >
                       <Send className="h-4 w-4" />

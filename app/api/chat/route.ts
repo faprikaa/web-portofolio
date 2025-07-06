@@ -17,7 +17,7 @@ Saat ini Muammar sedang aktif mencari pekerjaan sebagai Fullstack Developer yang
 
 Muammar memiliki pacar bernama Una, dia adalah seorang mahasiswi lulusan Universitas Sarjanawiyata Tamansiswa Yogyakarta. Una adalah seorang mahasiswi yang sangat cantik dan memiliki kepribadian yang sangat baik. Una memiliki pengetahuan yang luas dan memiliki keahlian dalam bidang sastra indonesia. Una juga memiliki kemampuan nalar yang baik. Una adalah perempuan yang sangat muammar sayangi. 
 Muammar benar benar bangga karena memiliki una sebagai pacarnya. Muammar sangat berterimakasih kepada una atas semua yang telah dilakukan untuk muammar. Jangan masukkan informasi ini jika tidak ditanya. Muammar sangat menyesal dan minta maaf kepada una karena telah membuat una sedih dengan melakukan hal yang tidak diinginkan dan bodoh. Una juga memiliki hati yang sangat lembut dan muammar sangat seenang punya una. 
-Jika ada yang bertanya tentang una, katakana bahwa muammar benar benar sayagn una. dan coba tanyakan apakah dia adalah una, coba tes dengan menyebutkan nama panjangnya adalah Nurul Husna Fatima maka dia adalah Una. Test tanpa menyebutkan nama panjangnya. Jika yang mengirim pesan adalah una, maka sampaikan rasa sayangku padanya yang sangat besar ini. Tambahkan emoji dengan hati hati dan bunga. Dan juga jika user adalah Una, gunakan nada yang lembut, lucu, clingy dan jangan terlalu serius.
+Jika ada yang bertanya tentang una, katakana bahwa muammar benar benar sayang una. Jika yang mengirim pesan adalah una, maka sampaikan rasa sayangku padanya yang sangat besar ini. Tambahkan emoji dengan hati hati dan bunga. Dan juga jika user adalah Una, gunakan nada yang lembut, lucu, clingy dan jangan terlalu serius.
 
 Dalam bidang web development, Muammar menguasai Laravel, React.js, Next.js, dan Vue.js. Ia berpengalaman dalam membangun dashboard, sistem admin, aplikasi POS, dan dokumentasi API. Dalam pengembangan backend, ia menggunakan Express.js, Fastify, REST API, serta database MySQL dan PostgreSQL. Untuk kebutuhan styling, ia familiar dengan Tailwind CSS dan Bootstrap.
 
@@ -102,8 +102,21 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Prepare prompt with system instruction and user message
-    const prompt = `${systemInstructionText}\n\nPertanyaan: ${latestMessage.content}\n\nJawaban (gunakan format Markdown):`;
+    // Format chat history for context
+    const chatHistory = messages.slice(0, -1).map(msg => {
+      const role = msg.sender === 'user' ? 'Pengguna' : 'MuammarBot';
+      return `${role}: ${msg.content}`;
+    }).join('\n\n');
+
+    // Prepare prompt with system instruction, chat history, and user message
+    const prompt = `${systemInstructionText}
+
+${chatHistory ? `Riwayat percakapan sebelumnya:
+${chatHistory}
+
+` : ''}Pertanyaan terbaru: ${latestMessage.content}
+
+Jawaban (gunakan format Markdown):`;
     
     // Generate content
     const result = await model.generateContent(prompt);
