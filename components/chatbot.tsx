@@ -119,12 +119,15 @@ export function Chatbot() {
   useEffect(() => {
     // Use a small timeout to ensure the DOM has updated
     const timeoutId = setTimeout(() => {
-      scrollToBottomAlign();
-      scrollToBottom();
+      // Don't scroll on initial render when isLoading is true
+      if (!isLoading) {
+        scrollToBottomAlign();
+        scrollToBottom();
+      }
     }, 100);
     
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [messages, isTyping, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
