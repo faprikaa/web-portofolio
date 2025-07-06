@@ -10,8 +10,18 @@ const ratelimitOptions = {
   ttl: 24 * 60 * 60 * 1000,
 };
 
+// Interface for tracking user access data
+interface UserAccessData {
+  count: number;
+  lastAccess: Date;
+  totalAccess: number;
+}
+
 // Create a cache to store user identifiers and their request counts
 const ratelimitCache = new LRUCache<string, number>(ratelimitOptions);
+
+// Store additional user access data (not subject to TTL expiry)
+const userAccessData = new Map<string, UserAccessData>();
 
 // Helper function to generate a unique identifier for the request
 function getUserIdentifier(request: NextRequest): string {
@@ -56,6 +66,13 @@ export async function rateLimit(request: NextRequest) {
   // Get the current count for this identifier
   const currentCount = ratelimitCache.get(identifier) || 0;
   
+  // Update user access data
+  const userData = userAccessData.get(identifier) || { count: 0, lastAccess: new Date(), totalAccess: 0 };
+  userData.count = currentCount + 1;
+  userData.lastAccess = new Date();
+  userData.totalAccess += 1;
+  userAccessData.set(identifier, userData);
+  
   // Check if the identifier has reached the limit
   if (currentCount >= ratelimitOptions.max) {
     return {
@@ -81,4 +98,39 @@ export function getRemainingMessages(request: NextRequest): number {
   const identifier = getUserIdentifier(request);
   const currentCount = ratelimitCache.get(identifier) || 0;
   return Math.max(0, ratelimitOptions.max - currentCount);
-} 
+}
+
+// Function to get all user access data (for admin purposes)
+export function getAllUserAccessData(): { 
+  users: Array<{ 
+    id: string; 
+    dailyCount: number; 
+    lastAccess: Date; 
+    totalAccess: number;
+    remaining: number;
+  }>;
+  totalUsers: number;
+  totalRequests: number;
+} {
+  const users = Array.from(userAccessData.entries()).map(([id, data]) => {
+    const dailyCount = ratelimitCache.get(id) || 0;
+    return {
+      id,
+      dailyCount,
+      lastAccess: data.lastAccess,
+      totalAccess: data.totalAccess,
+      remaining: Math.max(0, ratelimitOptions.max - dailyCount)
+    };
+  });
+  
+  const totalRequests = users.reduce((sum, user) => sum + user.totalAccess, 0);
+  
+  return {
+    users,
+    totalUsers: users.length,
+    totalRequests
+  };
+}
+
+// Secret admin key for accessing stats
+export const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'muammar_admin_secret_key_change_this'; 

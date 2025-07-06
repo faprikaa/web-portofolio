@@ -124,7 +124,7 @@ export function Chatbot() {
     }, 100);
     
     return () => clearTimeout(timeoutId);
-  }, [messages, isTyping]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
