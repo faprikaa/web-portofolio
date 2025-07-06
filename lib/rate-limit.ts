@@ -1,6 +1,5 @@
 import { LRUCache } from 'lru-cache';
 import { NextRequest, NextResponse } from 'next/server';
-import { createHash } from 'crypto';
 
 // Define options for the rate limiter
 const ratelimitOptions = {
@@ -23,8 +22,18 @@ const ratelimitCache = new LRUCache<string, number>(ratelimitOptions);
 // Store additional user access data (not subject to TTL expiry)
 const userAccessData = new Map<string, UserAccessData>();
 
+// Helper function to generate a hash using Web Crypto API
+async function generateHash(text: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 // Helper function to generate a unique identifier for the request
-function getUserIdentifier(request: NextRequest): string {
+async function getUserIdentifier(request: NextRequest): Promise<string> {
   // Get IP address
   const ip = getIP(request);
   
@@ -38,7 +47,7 @@ function getUserIdentifier(request: NextRequest): string {
   const identifier = `${ip}:${userAgent}:${acceptLanguage}`;
   
   // Hash the identifier to protect privacy and ensure consistent length
-  return createHash('sha256').update(identifier).digest('hex');
+  return await generateHash(identifier);
 }
 
 // Helper function to get IP address from request
@@ -61,7 +70,7 @@ function getIP(request: NextRequest): string {
 
 export async function rateLimit(request: NextRequest) {
   // Get the unique identifier for this request
-  const identifier = getUserIdentifier(request);
+  const identifier = await getUserIdentifier(request);
   
   // Get the current count for this identifier
   const currentCount = ratelimitCache.get(identifier) || 0;
@@ -94,8 +103,8 @@ export async function rateLimit(request: NextRequest) {
 }
 
 // Helper function to get remaining message count
-export function getRemainingMessages(request: NextRequest): number {
-  const identifier = getUserIdentifier(request);
+export async function getRemainingMessages(request: NextRequest): Promise<number> {
+  const identifier = await getUserIdentifier(request);
   const currentCount = ratelimitCache.get(identifier) || 0;
   return Math.max(0, ratelimitOptions.max - currentCount);
 }

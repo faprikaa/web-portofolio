@@ -59,7 +59,7 @@ Beberapa keahlian utamanya:
 
 // API endpoint for getting remaining message count
 export async function GET(request: NextRequest) {
-  const remaining = getRemainingMessages(request);
+  const remaining = await getRemainingMessages(request);
   return NextResponse.json({ remaining, limit: 15 });
 }
 
