@@ -15,6 +15,7 @@ interface Project {
   title: string
   description: string
   image: string
+  image_cover?: string | null | undefined
   technologies: string[]
   github: string
   live: string
@@ -74,181 +75,190 @@ export function Projects() {
   }
 
   const projects: Project[] = [
+    // muslimat nu
     {
-      title: "E-Commerce Platform",
+      title: "Muslimat NU DIY Website",
       description:
-        "Full-stack e-commerce solution with payment integration, inventory management, and admin dashboard.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "Tailwind CSS"],
+        "Muslimat NU DIY Website is a website built for a non-profit Islamic women's organization to publish activities, programs, and bulletins.",
+      image: "/image-projects/muslimatnu-potrait.png",
+      image_cover: "/image-projects/muslimatnu-landscape.png",
+      technologies: ["WordPress", "Elementor", "ACF", "UpdraftPlus", "Flipbook Plugin"],
       github: "#",
-      live: "#",
+      live: "https://muslimatnu-diy.or.id/",
       detailedDescription:
-        "A comprehensive e-commerce platform built with modern web technologies. This project features a complete shopping experience with user authentication, product catalog, shopping cart, secure payment processing, and an admin dashboard for inventory management. The platform is designed to handle high traffic and provides a seamless user experience across all devices.",
+        "A dynamic and responsive WordPress website developed for Muslimat Nahdlatul Ulama DIY, aimed at publishing organizational activities, digital documentation, and public outreach. Built using Elementor and ACF, the site features structured content like news, leadership hierarchy, and work programs. It also includes an interactive 3D flipbook for digital bulletins, with backend access for admins. In addition to development, I also trained website administrators — members of NU DIY — on how to write, upload, and manage content, ensuring long-term usability by non-technical users.",
       features: [
-        "User authentication and profile management",
-        "Product catalog with advanced filtering and search",
-        "Shopping cart and wishlist functionality",
-        "Secure payment processing with Stripe",
-        "Order tracking and history",
-        "Admin dashboard for inventory management",
-        "Real-time notifications",
-        "Responsive design for all devices",
+        "Built with Elementor for flexible page design",
+        "Dynamic post types: news, organizational structure, and work programs",
+        "Interactive digital bulletin using 3D flipbook plugin",
+        "Admin dashboard with secure login for content management",
+        "ACF integration to connect posts with organizational divisions",
+        "Responsive design optimized for mobile and desktop",
+        "Optimized performance with caching and image compression"
       ],
       challenges: [
-        "Implementing secure payment processing",
-        "Optimizing database queries for large product catalogs",
-        "Building a scalable admin dashboard",
-        "Ensuring mobile responsiveness",
+        "Learning Elementor to build custom layouts",
+        "Configuring ACF to relate content with divisions",
+        "Optimizing website speed and load time",
+        "Automating backups with UpdraftPlus plugin",
+        "Training non-technical users to manage content independently"
       ],
-      duration: "4 months",
-      teamSize: "3 developers",
-      role: "Lead Full-Stack Developer",
-    },
+      duration: "3 months",
+      teamSize: "3 developer",
+      role: "Full-Stack WordPress Developer & Trainer"
+    },    
+    // tumbas pos
     {
-      title: "Task Management App",
-      description: "Collaborative project management tool with real-time updates, team collaboration, and analytics.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["React", "Node.js", "MongoDB", "Socket.io", "Material-UI"],
+      title: "Tumbas Point of Sale",
+      description: "Point of Sale system with multiple features. Like inventory management, sales, and more.",
+      image: "/image-projects/Tumbas APP.png",
+      image_cover: "/image-projects/Tumbas-APP-Landcape-fix.png",
+      technologies: ["Laravel", "MySQL", "Bootstrap", "JQuery", "AdminLTE"],
       github: "#",
-      live: "#",
+      live: "https://nani.eu.org",
       detailedDescription:
         "A powerful task management application designed for teams to collaborate effectively. Built with real-time synchronization, the app allows team members to create, assign, and track tasks with live updates. Features include project boards, time tracking, team chat, and comprehensive analytics to monitor project progress and team productivity.",
+        features: [
+          "Product and stock management",
+          "Daily sales with barcode scanning",
+          "Multi-user access with roles",
+          "Sales and debt reports",
+          "Customer and supplier tracking",
+          "Return & discount handling",
+          "Multi-outlet and offline support",
+          "Real-time sales dashboard"
+        ],
+        challenges: [
+          "Real-time stock updates during transactions",
+          "Optimizing performance for large data",
+          "Designing fast and intuitive cashier UI",
+          "Secure role-based access control",
+          "Integrating POS hardware (scanner, printer)"
+        ],
+      duration: "6 months",
+      teamSize: "3 developers",
+      role: "Lead Full-Stack Developer & Cloud Engineer",
+    },
+    // admin muslimat nu
+    {
+      title: "Admin Muslimat NU DIY",
+      description: "Internal dashboard for managing members, assets, and organizational data across regions.",
+      image: "/image-projects/admin-muslimat-nu-potrait.png",
+      image_cover: "/image-projects/admin-muslimat-nu-landscape.png",
+      technologies: ["Laravel", "MySQL", "Bootstrap", "JQuery", "AdminLTE"],
+      github: "#",
+      live: "https://admin.muslimatnu-diy.or.id/",
+      detailedDescription:
+        "A centralized administrative dashboard developed for Muslimat NU DIY to manage internal data, including member registration, organizational hierarchy (province, branch, sub-branch), work groups, and asset tracking. Built with Laravel and AdminLTE, this platform enables real-time data visualization and user-friendly management tools. It supports role-based access for different levels of admins and streamlines internal data reporting and member verification.",
       features: [
-        "Real-time task updates with Socket.io",
-        "Drag-and-drop task boards",
-        "Team collaboration and chat",
-        "Time tracking and reporting",
-        "Project analytics and insights",
-        "File attachments and comments",
-        "Custom project templates",
-        "Mobile-responsive interface",
+        "Member registration with photo and document upload",
+        "Dynamic dashboard with charts and statistics",
+        "Multi-level organization structure: province, branch, sub-branch",
+        "Data management for assets, work groups, and expertise",
+        "Member confirmation and admin role approval system",
+        "Responsive layout with sidebar navigation",
+        "Search, sort, and paginate across data tables"
       ],
       challenges: [
-        "Implementing real-time synchronization across multiple users",
-        "Building an intuitive drag-and-drop interface",
-        "Optimizing performance for large datasets",
-        "Creating comprehensive analytics dashboard",
+        "Designing multi-level data hierarchy (cabang, anak cabang, ranting)",
+        "Ensuring data validation across complex forms",
+        "Integrating dynamic visualizations for organizational insights",
+        "Managing user access roles securely",
+        "Balancing functionality with ease of use for non-technical users"
       ],
       duration: "3 months",
-      teamSize: "2 developers",
-      role: "Full-Stack Developer",
-    },
+      teamSize: "3 developer",
+      role: "Full-Stack Developer & Cloud Engineer"
+    },    
+    // Tembak Target Game
     {
-      title: "Social Media Dashboard",
-      description: "Analytics dashboard for social media management with data visualization and scheduling features.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["Vue.js", "Python", "Django", "Chart.js", "PostgreSQL"],
-      github: "#",
-      live: "#",
+      title: "Tembak Target Game",
+      description: "A fast-paced shooting game where players hit moving targets to score points and master accuracy.",
+      image: "/image-projects/tembak-target-potrait.png",
+      image_cover: "/image-projects/tembak-target-landscape.png",
+      technologies: ["GDevelop", "Game Design", "GDScript"],
+      github: "https://github.com/MaulanaYusufAhmadi/tembak_target",
+      live: "https://faprika.itch.io/tembak-target",
       detailedDescription:
-        "A comprehensive social media management dashboard that aggregates data from multiple platforms. The application provides detailed analytics, content scheduling, and performance tracking across various social media channels. Built with Vue.js frontend and Django backend, it offers powerful data visualization and automated reporting features.",
+        "Tembak Target (Target Mastery) is a 2D browser-based shooting game built with GDevelop. Players aim to hit as many moving targets as possible within a time limit, with increasing difficulty at each level. The game is optimized for both desktop and mobile browsers, with virtual joystick controls on touch devices. Designed with arcade aesthetics, the game provides a smooth and engaging experience while showcasing shooting accuracy and reaction speed.",
       features: [
-        "Multi-platform social media integration",
-        "Advanced analytics and reporting",
-        "Content scheduling and automation",
-        "Interactive data visualizations",
-        "Custom dashboard widgets",
-        "Team collaboration tools",
-        "Automated report generation",
-        "API integrations with major platforms",
+        "Interactive shooting gameplay with increasing difficulty",
+        "Target variety including decoys and explosive traps",
+        "Timer-based levels with score tracking",
+        "Mobile and desktop support with adaptive controls",
+        "Custom level design using GDevelop event system",
+        "Arcade-style UI with animated feedback"
       ],
       challenges: [
-        "Integrating with multiple social media APIs",
-        "Building complex data visualizations",
-        "Handling large amounts of social media data",
-        "Creating an intuitive user interface",
+        "Implementing smooth shooting mechanics across devices",
+        "Handling multi-platform input (keyboard, mouse, touch)",
+        "Balancing game difficulty and pacing",
+        "Creating intuitive game UI and feedback animations"
       ],
-      duration: "5 months",
-      teamSize: "4 developers",
-      role: "Frontend Lead",
+      duration: "2 months",
+      teamSize: "4 developer",
+      role: "Game Designer & Developer"
     },
+    // AI-Powered Bird Detector and Repellent System    
     {
-      title: "Mobile Banking App",
-      description: "Secure mobile banking application with biometric authentication and transaction management.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["React Native", "Firebase", "Redux", "Expo", "TypeScript"],
-      github: "#",
-      live: "#",
+      title: "AI-Powered Bird Detector & Repellent System",
+      description: "An IoT-based system that detects birds and repels them using AI-powered object detection and automated speaker activation.",
+      image: "/image-projects/bird-repellent-potrait.png",
+      image_cover: "/image-projects/bird-repellent-landscape.png",
+      technologies: ["ESP32-CAM", "Streamlit", "YOLOv5", "Flask", "Solar Panel", "Python"],
+      github: "http://github.com/SIC-CodeGenesis/",
+      live: "https://www.youtube.com/watch?v=dJZAMjJg0kg",
       detailedDescription:
-        "A secure and user-friendly mobile banking application built with React Native. The app provides comprehensive banking services including account management, money transfers, bill payments, and transaction history. Security is paramount with biometric authentication, encryption, and fraud detection systems integrated throughout the application.",
+        "A smart agricultural IoT system designed to automatically detect birds in rice fields and trigger a speaker to scare them away. Using ESP32-CAM, the system streams real-time video to a dashboard where a custom-trained YOLOv5 model performs object detection. If birds are detected, a speaker module is activated. Additionally, the system can analyze uploaded plant images for rice disease detection using a separate AI model. Powered by solar energy and managed through a web-based dashboard built with Streamlit.",
       features: [
-        "Biometric authentication (fingerprint/face ID)",
-        "Account balance and transaction history",
-        "Money transfers and bill payments",
-        "Mobile check deposits",
-        "ATM and branch locator",
-        "Push notifications for transactions",
-        "Budgeting and spending analytics",
-        "24/7 customer support chat",
+        "Real-time bird detection with YOLOv5",
+        "Speaker activation on detection",
+        "Solar-powered ESP32-CAM device",
+        "Web-based dashboard to monitor live camera feed",
+        "Configurable speaker and camera settings",
+        "Rice disease analysis from uploaded images",
+        "Automatic image capture and logging"
       ],
       challenges: [
-        "Implementing robust security measures",
-        "Ensuring compliance with banking regulations",
-        "Building biometric authentication",
-        "Optimizing performance for various devices",
+        "Deploying custom AI models on limited IoT hardware",
+        "Maintaining stable ESP32-CAM live stream to dashboard",
+        "Synchronizing detection events with hardware output (speaker)",
+        "Designing a power-efficient system with solar charging",
+        "Building responsive dashboard UI using Streamlit"
       ],
       duration: "6 months",
-      teamSize: "5 developers",
-      role: "Mobile Developer",
+      teamSize: "4 developers",
+      role: "AI & Embedded System Engineer"
     },
     {
-      title: "AI Content Generator",
-      description: "AI-powered content generation platform with multiple templates and export options.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["Next.js", "OpenAI API", "Prisma", "Supabase", "Tailwind CSS"],
-      github: "#",
-      live: "#",
+      title: "CropOptima - Smart Farming Recommendation App",
+      description: "Mobile app that recommends the best crops to plant based on location, soil, and weather conditions.",
+      image: "/image-projects/crop-optima-potrait.png",
+      image_cover: "/image-projects/crop-optima-landscape.png",
+      technologies: ["Kotlin", "Google Cloud", "Firebase", "App Engine", "Cloud SQL", "ML Model API"],
+      github: "https://github.com/panduwjaya/CropOptima-Fullteam",
+      live: "https://youtube.com/shorts/77T8sIFI7qM?si=o_kUA98uIG9dMeBC",
       detailedDescription:
-        "An innovative AI-powered content generation platform that helps users create high-quality content for various purposes. Leveraging OpenAI's GPT models, the platform offers multiple content templates, customization options, and export formats. Users can generate blog posts, social media content, marketing copy, and more with just a few clicks.",
+        "CropOptima is a smart agriculture application that uses AI and cloud infrastructure to recommend the most optimal crops to plant based on user-input soil nutrients (NPK), pH level, and geolocation. The app integrates machine learning models deployed on GCP to analyze environmental data and provide accurate crop suggestions. Built with a mobile-first approach, it includes features like authentication, input forms, detection results, and cloud-based architecture.",
       features: [
-        "AI-powered content generation",
-        "Multiple content templates",
-        "Custom prompt engineering",
-        "Content editing and refinement",
-        "Export to various formats",
-        "Content history and management",
-        "Team collaboration features",
-        "Usage analytics and insights",
+        "AI-based crop recommendation system",
+        "Soil nutrient input (NPK, pH)",
+        "Geolocation-based suggestions",
+        "Cloud-based ML inference via App Engine",
+        "User authentication (register, login, reset)",
+        "Result visualization with crop images and details",
+        "Responsive and intuitive UI"
       ],
       challenges: [
-        "Integrating with OpenAI API effectively",
-        "Building intuitive content templates",
-        "Managing API costs and rate limits",
-        "Creating a smooth user experience",
+        "Deploying ML models on Google Cloud Platform",
+        "Handling real-time data input and cloud communication",
+        "Ensuring accurate recommendations from noisy soil data",
+        "Designing user-friendly mobile interface for farmers"
       ],
-      duration: "3 months",
-      teamSize: "2 developers",
-      role: "Full-Stack Developer",
-    },
-    {
-      title: "Real Estate Platform",
-      description: "Property listing and management platform with advanced search and virtual tours.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["React", "Express.js", "MySQL", "AWS S3", "Google Maps API"],
-      github: "#",
-      live: "#",
-      detailedDescription:
-        "A comprehensive real estate platform that connects buyers, sellers, and agents. The platform features advanced property search, virtual tours, mortgage calculators, and agent management tools. Built with scalability in mind, it handles thousands of property listings with high-performance search and filtering capabilities.",
-      features: [
-        "Advanced property search and filtering",
-        "Interactive maps with Google Maps API",
-        "Virtual property tours",
-        "Mortgage calculator and tools",
-        "Agent profiles and contact system",
-        "Saved searches and favorites",
-        "Property comparison tools",
-        "Mobile-responsive design",
-      ],
-      challenges: [
-        "Building complex search functionality",
-        "Integrating with mapping services",
-        "Handling large amounts of property data",
-        "Creating virtual tour experiences",
-      ],
-      duration: "4 months",
-      teamSize: "3 developers",
-      role: "Backend Developer",
-    },
+      duration: "6 months",
+      teamSize: "7 developers",
+      role: "Android Developer & Cloud Engineer"
+    }    
   ]
 
   // Create seamless infinite loop by tripling projects
@@ -499,7 +509,7 @@ export function Projects() {
                     {/* Non-clickable Image Area - Grabbable */}
                     <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center cursor-grab">
                       <img
-                        src={project.image || "/placeholder.svg"}
+                        src={project.image_cover || "/placeholder.svg"}
                         alt={project.title}
                         className="w-full h-full object-cover pointer-events-none"
                         draggable={false}
@@ -633,6 +643,20 @@ export function Projects() {
                     <p className="text-muted-foreground leading-relaxed">{selectedProject.detailedDescription}</p>
                   </div>
 
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-3 pt-4">
+                    <Button className="flex-1" onClick={() => handleViewCode(selectedProject.title)}>
+                      <Github className="h-4 w-4 mr-2" />
+                      View Code
+                    </Button>
+                    <Button variant="outline" className="flex-1 bg-transparent" asChild>
+                      <a href={selectedProject.live} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Live Demo
+                      </a>
+                    </Button>
+                  </div>
+
                   {/* Features */}
                   <div>
                     <h3 className="text-lg font-semibold mb-3">Key Features</h3>
@@ -658,29 +682,15 @@ export function Projects() {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-3 pt-4">
-                    <Button className="flex-1" onClick={() => handleViewCode(selectedProject.title)}>
-                      <Github className="h-4 w-4 mr-2" />
-                      View Code
-                    </Button>
-                    <Button variant="outline" className="flex-1 bg-transparent" asChild>
-                      <a href={selectedProject.live} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Live Demo
-                      </a>
-                    </Button>
-                  </div>
                 </div>
 
                 {/* Right Side - Project Screenshot */}
                 <div className="lg:sticky lg:top-6">
-                  <div className="aspect-video bg-muted rounded-lg overflow-hidden border border-border shadow-lg">
+                  <div className="rounded-lg overflow-hidden border border-border shadow-lg">
                     <img
                       src={selectedProject.image || "/placeholder.svg"}
                       alt={`${selectedProject.title} screenshot`}
-                      className="w-full h-full object-cover"
+                      className="w-full object-contain"
                     />
                   </div>
                   <p className="text-sm text-muted-foreground mt-2 text-center">Project Screenshot</p>
