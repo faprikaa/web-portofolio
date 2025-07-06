@@ -37,7 +37,7 @@ export function Projects() {
   const [scrollSpeed, setScrollSpeed] = useState(1)
   const { toast } = useToast()
   const scrollRef = useRef<HTMLDivElement>(null)
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number>(0)
   const scrollPositionRef = useRef(0)
   const [isHovering, setIsHovering] = useState(false)
 
@@ -487,10 +487,10 @@ export function Projects() {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={(e) => {
-                setIsHovering(false)
-                handleMouseLeave(e)
-              }}
+              // onMouseLeave={(e) => {
+              //   setIsHovering(false)
+              //   handleMouseLeave(e)
+              // }}
             >
               <div
                 ref={scrollRef}
