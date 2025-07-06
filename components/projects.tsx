@@ -75,6 +75,38 @@ export function Projects() {
   }
 
   const projects: Project[] = [
+    // tumbas pos
+    {
+      title: "Tumbas Point of Sale",
+      description: "Point of Sale system with multiple features. Like inventory management, sales, and more.",
+      image: "/image-projects/tumbas-potrait.png",
+      image_cover: "/image-projects/tumbas-landscape.png",
+      technologies: ["Laravel", "MySQL", "Bootstrap", "JQuery", "AdminLTE"],
+      github: "#",
+      live: "https://nani.eu.org",
+      detailedDescription:
+        "A powerful task management application designed for teams to collaborate effectively. Built with real-time synchronization, the app allows team members to create, assign, and track tasks with live updates. Features include project boards, time tracking, team chat, and comprehensive analytics to monitor project progress and team productivity.",
+      features: [
+        "Product and stock management",
+        "Daily sales with barcode scanning",
+        "Multi-user access with roles",
+        "Sales and debt reports",
+        "Customer and supplier tracking",
+        "Return & discount handling",
+        "Multi-outlet and offline support",
+        "Real-time sales dashboard"
+      ],
+      challenges: [
+        "Real-time stock updates during transactions",
+        "Optimizing performance for large data",
+        "Designing fast and intuitive cashier UI",
+        "Secure role-based access control",
+        "Integrating POS hardware (scanner, printer)"
+      ],
+      duration: "6 months",
+      teamSize: "3 developers",
+      role: "Lead Full-Stack Developer & Cloud Engineer",
+    },
     // muslimat nu
     {
       title: "Muslimat NU DIY Website",
@@ -106,38 +138,6 @@ export function Projects() {
       duration: "3 months",
       teamSize: "3 developer",
       role: "Full-Stack WordPress Developer & Trainer"
-    },    
-    // tumbas pos
-    {
-      title: "Tumbas Point of Sale",
-      description: "Point of Sale system with multiple features. Like inventory management, sales, and more.",
-      image: "/image-projects/Tumbas APP.png",
-      image_cover: "/image-projects/Tumbas-APP-Landcape-fix.png",
-      technologies: ["Laravel", "MySQL", "Bootstrap", "JQuery", "AdminLTE"],
-      github: "#",
-      live: "https://nani.eu.org",
-      detailedDescription:
-        "A powerful task management application designed for teams to collaborate effectively. Built with real-time synchronization, the app allows team members to create, assign, and track tasks with live updates. Features include project boards, time tracking, team chat, and comprehensive analytics to monitor project progress and team productivity.",
-        features: [
-          "Product and stock management",
-          "Daily sales with barcode scanning",
-          "Multi-user access with roles",
-          "Sales and debt reports",
-          "Customer and supplier tracking",
-          "Return & discount handling",
-          "Multi-outlet and offline support",
-          "Real-time sales dashboard"
-        ],
-        challenges: [
-          "Real-time stock updates during transactions",
-          "Optimizing performance for large data",
-          "Designing fast and intuitive cashier UI",
-          "Secure role-based access control",
-          "Integrating POS hardware (scanner, printer)"
-        ],
-      duration: "6 months",
-      teamSize: "3 developers",
-      role: "Lead Full-Stack Developer & Cloud Engineer",
     },
     // admin muslimat nu
     {
@@ -169,7 +169,7 @@ export function Projects() {
       duration: "3 months",
       teamSize: "3 developer",
       role: "Full-Stack Developer & Cloud Engineer"
-    },    
+    },
     // Tembak Target Game
     {
       title: "Tembak Target Game",
@@ -258,7 +258,7 @@ export function Projects() {
       duration: "6 months",
       teamSize: "7 developers",
       role: "Android Developer & Cloud Engineer"
-    }    
+    }
   ]
 
   // Create seamless infinite loop by tripling projects
@@ -643,8 +643,8 @@ export function Projects() {
                     <p className="text-muted-foreground leading-relaxed">{selectedProject.detailedDescription}</p>
                   </div>
 
-                                    {/* Action Buttons */}
-                                    <div className="flex gap-3 pt-4">
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-4">
                     <Button className="flex-1" onClick={() => handleViewCode(selectedProject.title)}>
                       <Github className="h-4 w-4 mr-2" />
                       View Code
