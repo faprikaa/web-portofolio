@@ -65,7 +65,6 @@ export function Chatbot() {
       } catch (error) {
         console.error('Error fetching remaining messages:', error);
       } finally {
-        scrollToBottom();
         setIsLoading(false);
       }
     };
