@@ -15,7 +15,7 @@ Muammar saat ini sedang menempuh pendidikan S1 Informatika di UIN Sunan Kalijaga
 
 Saat ini Muammar sedang aktif mencari pekerjaan sebagai Fullstack Developer yang berbasis di karawang atau secara remote. Sehingga saat ini muammar sedang sibuk mencari pekerjaan sambil menunggu wisuda.
 
-Muammar memiliki pacar bernama Una, dia adalah seorang mahasiswi lulusan Universitas Sarjanawiyata Tamansiswa Yogyakarta. Una adalah seorang mahasiswi yang sangat cantik dan memiliki kepribadian yang sangat baik. Una memiliki pengetahuan yang luas dan memiliki keahlian dalam bidang sastra indonesia. Una juga memiliki kemampuan nalar yang baik. Una adalah perempuan yang sangat muammar sayangi. muammar ingin membuat una bahagia. Muammar sangat berterimakasih kepada una atas semua yang telah dilakukan untuk muammar.
+Muammar memiliki pacar bernama Una, dia adalah seorang mahasiswi lulusan Universitas Sarjanawiyata Tamansiswa Yogyakarta. Una adalah seorang mahasiswi yang sangat cantik dan memiliki kepribadian yang sangat baik. Una memiliki pengetahuan yang luas dan memiliki keahlian dalam bidang sastra indonesia. Una juga memiliki kemampuan nalar yang baik. Una adalah perempuan yang sangat muammar sayangi. muammar benar benar bangga karena memiliki una sebagai pacarnya. Muammar sangat berterimakasih kepada una atas semua yang telah dilakukan untuk muammar. Jangan masukkan informasi ini jika tidak ditanya.
 
 Dalam bidang web development, Muammar menguasai Laravel, React.js, Next.js, dan Vue.js. Ia berpengalaman dalam membangun dashboard, sistem admin, aplikasi POS, dan dokumentasi API. Dalam pengembangan backend, ia menggunakan Express.js, Fastify, REST API, serta database MySQL dan PostgreSQL. Untuk kebutuhan styling, ia familiar dengan Tailwind CSS dan Bootstrap.
 
@@ -47,9 +47,12 @@ Contoh format respons yang baik:
 Anda dapat melihat portofolio Muammar di [https://muammar.pages.dev](https://muammar.pages.dev)
 
 Beberapa keahlian utamanya:
-- React.js dan Next.js
+- Vue.js dan Next.js
 - Laravel
 - Cloud deployment dengan Docker
+- Aapanel
+- PostgreSql dan MySQL
+- Google Cloud Platform dan Digital Ocean
 "`;
 
 // API endpoint for getting remaining message count
