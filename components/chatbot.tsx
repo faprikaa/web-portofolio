@@ -155,8 +155,8 @@ export function Chatbot() {
     setInput("")
     
     // Scroll to bottom when user sends a message
-    scrollToBottomAlign();
     scrollToBottom();
+    scrollToBottomAlign();
     
     // Check if user has reached the rate limit
     if (remainingMessages <= 0) {
@@ -179,8 +179,8 @@ export function Chatbot() {
         setIsTyping(false);
         
         // Scroll after bot responds
-        scrollToBottomAlign();
         scrollToBottom();
+        scrollToBottomAlign();
       }, 1500);
       
       return;
@@ -232,9 +232,11 @@ export function Chatbot() {
       setMessages((prev) => [...prev, errorMessage]);
       
       // Scroll after error message
-      scrollToBottomAlign();
       scrollToBottom();
+      scrollToBottomAlign();
     } finally {
+      scrollToBottom();
+      scrollToBottomAlign();
       setIsTyping(false);
     }
   }
@@ -306,8 +308,8 @@ export function Chatbot() {
       setMessages((prev) => [...prev, errorMessage]);
       
       // Scroll after error message
-      scrollToBottomAlign();
       scrollToBottom();
+      scrollToBottomAlign();
     } finally {
       setIsTyping(false);
     }
