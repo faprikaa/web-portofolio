@@ -143,7 +143,7 @@ export function Chatbot() {
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Sparkles className="h-8 w-8 text-primary" />
-              <h2 className="text-3xl md:text-4xl font-bold">AI Assistant</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">AI Assistant (not working yet)</h2>
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Chat with my AI assistant to learn more about my skills, experience, and projects. Ask anything you'd like
