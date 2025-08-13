@@ -29,8 +29,11 @@ export function Hero() {
             <Button size="lg" className="text-lg px-8 shadow-lg" onClick={() => scrollToProjects()}>
               View My Work
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 shadow-lg" onClick={() => window.open("/documents/Muammar_Mufid_Darmindra-resume2807.pdf", "_blank")}>
-              Download CV
+            <Button size="lg" variant="outline" className="text-lg px-8 shadow-lg" onClick={() => window.open("/documents/english/Eng-Muammar_Mufid_Darmindra-resume1108.pdf", "_blank")}>
+              Download CV (English)
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 shadow-lg" onClick={() => window.open("/documents/indonesia/Muammar_Mufid_Darmindra-resume1108.pdf", "_blank")}>
+              Download CV (Indonesia)
             </Button>
           </div>
           <div className="flex justify-center space-x-6">
