@@ -10,6 +10,27 @@ import { Navigation } from "@/components/navigation"
 export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Muammar Mufid Darmindra',
+            url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+            image: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/placeholder-user.jpg`,
+            jobTitle: 'Fullstack Developer & Cloud Engineer',
+            sameAs: [
+              'https://github.com/',
+              'https://www.linkedin.com/',
+            ],
+            worksFor: {
+              '@type': 'Organization',
+              name: 'Independent',
+            },
+          }),
+        }}
+      />
       <Navigation />
       <main>
         <Hero />
