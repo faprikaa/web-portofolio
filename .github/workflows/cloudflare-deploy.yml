@@ -36,7 +36,7 @@ jobs:
           # Add any other environment variables required for the build here
         continue-on-error: true
           
-      - name: Deploy
+      - name: Deploy 2
         run: pnpm dlx wrangler pages deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
