@@ -2,9 +2,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, getRemainingMessages } from '@/lib/rate-limit';
 
-// Configure Edge Runtime
-export const runtime = 'edge';
-
 // Initialize the Gemini AI client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -62,28 +59,28 @@ export async function POST(request: NextRequest) {
   try {
     // Check rate limit
     const rateLimitResult = await rateLimit(request);
-    
+
     // If rate limit exceeded, return 429 Too Many Requests
     if (!rateLimitResult.success) {
       return NextResponse.json(
-        { 
-          error: 'Rate limit exceeded', 
+        {
+          error: 'Rate limit exceeded',
           limit: rateLimitResult.limit,
           remaining: rateLimitResult.remaining
-        }, 
+        },
         { status: 429 }
       );
     }
-    
+
     const { messages } = await request.json();
-    
+
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: 'Invalid messages format' }, { status: 400 });
     }
 
     // Get the latest user message
     const latestMessage = messages[messages.length - 1];
-    
+
     if (latestMessage.sender !== 'user') {
       return NextResponse.json({ error: 'Last message must be from user' }, { status: 400 });
     }
@@ -120,13 +117,13 @@ ${chatHistory}
 ` : ''}Pertanyaan terbaru: ${latestMessage.content}
 
 Jawaban (gunakan format Markdown):`;
-    
+
     // Generate content
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: {
         id: Date.now().toString(),
         content: text,
@@ -139,7 +136,7 @@ Jawaban (gunakan format Markdown):`;
   } catch (error) {
     console.error('Error in chat API:', error);
     return NextResponse.json(
-      { error: 'Failed to process chat request' }, 
+      { error: 'Failed to process chat request' },
       { status: 500 }
     );
   }

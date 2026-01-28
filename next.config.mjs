@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
 const nextConfig = {
   eslint: {
@@ -16,8 +16,7 @@ const nextConfig = {
   },
 }
 
-if (process.env.NODE_ENV === 'development') {
-  await setupDevPlatform();
-}
+// Initialize OpenNext for local development
+initOpenNextCloudflareForDev();
 
 export default nextConfig

@@ -28,3 +28,8 @@ next-env.d.ts
 
 # auto-generated files
 /public/cv-content.txt
+
+# cloudflare
+/.open-next/
+/.wrangler/
+/.dev.vars
