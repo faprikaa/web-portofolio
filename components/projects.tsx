@@ -441,7 +441,7 @@ export function Projects() {
   }, [])
 
   return (
-    <section id="projects" className="py-16 bg-gradient-to-b from-primary/5 to-primary/10">
+    <section id="projects" className="min-h-screen flex items-center py-16 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-4">

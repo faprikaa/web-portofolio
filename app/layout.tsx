@@ -13,53 +13,83 @@ export const metadata: Metadata = {
     default: "Muammar Mufid Darmindra — Fullstack Developer & Cloud Engineer",
     template: "%s | Muammar Mufid Darmindra",
   },
-  description: "Portofolio Fullstack Developer & Cloud Engineer: proyek, skill, pengalaman, kontak.",
+  description: "Professional Fullstack Developer & Cloud Engineer specializing in Next.js, TypeScript, React, and cloud infrastructure. View my projects, skills, and experience.",
   keywords: [
     "Muammar Mufid Darmindra",
     "Fullstack Developer",
     "Cloud Engineer",
     "Portfolio",
     "Next.js",
-    "TypeScript"
+    "TypeScript",
+    "React",
+    "Web Developer",
+    "Software Engineer",
+    "JavaScript",
+    "Node.js",
+    "Cloud Computing",
+    "AWS",
+    "GCP",
+    "Cloudflare"
   ],
   authors: [{ name: "Muammar Mufid Darmindra", url: process.env.NEXT_PUBLIC_SITE_URL }],
   creator: "Muammar Mufid Darmindra",
   publisher: "Muammar Mufid Darmindra",
-  alternates: { canonical: "/" },
+  applicationName: "Muammar Mufid Portfolio",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      'en-US': '/',
+      'id-ID': '/',
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
+    alternateLocale: ["id_ID"],
     siteName: "Muammar Mufid Darmindra",
     title: "Muammar Mufid Darmindra — Fullstack Developer & Cloud Engineer",
-    description: "Portofolio Fullstack Developer & Cloud Engineer: proyek, skill, pengalaman, kontak.",
+    description: "Professional Fullstack Developer & Cloud Engineer specializing in Next.js, TypeScript, React, and cloud infrastructure. View my projects, skills, and experience.",
     images: [
       {
-        url: "/placeholder-user.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Muammar Mufid Darmindra",
+        alt: "Muammar Mufid Darmindra - Fullstack Developer & Cloud Engineer Portfolio",
+        type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Muammar Mufid Darmindra — Fullstack Developer & Cloud Engineer",
-    description: "Portofolio Fullstack Developer & Cloud Engineer: proyek, skill, pengalaman, kontak.",
-    images: ["/placeholder-user.jpg"],
+    description: "Professional Fullstack Developer & Cloud Engineer specializing in Next.js, TypeScript, React, and cloud infrastructure.",
+    images: ["/og-image.png"],
+    creator: "@muammarmufid",
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       "max-image-preview": "large",
       "max-snippet": -1,
       "max-video-preview": -1,
     },
   },
   category: "technology",
-  generator: 'v0.dev'
+  classification: "Portfolio Website",
+  other: {
+    "google-site-verification": process.env.GOOGLE_SITE_VERIFICATION ?? "",
+  },
 }
 
 export default function RootLayout({

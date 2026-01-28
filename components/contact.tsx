@@ -52,7 +52,7 @@ export function Contact() {
   ]
 
   return (
-    <section id="contact" className="py-16 bg-gradient-to-t from-muted/30 to-background">
+    <section id="contact" className="min-h-screen flex items-center py-16 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">

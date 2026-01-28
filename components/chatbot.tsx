@@ -114,9 +114,11 @@ export function Chatbot() {
   }, [messages]);
 
   const scrollToBottom = () => {
-    if (boxMessageRef.current) {
-      boxMessageRef.current.scrollTop = boxMessageRef.current.scrollHeight;
-    }
+    setTimeout(() => {
+      if (boxMessageRef.current) {
+        boxMessageRef.current.scrollTop = boxMessageRef.current.scrollHeight;
+      }
+    }, 50);
   }
 
   const scrollToBottomAlign = () => {
@@ -348,34 +350,24 @@ export function Chatbot() {
   return (
     <section
       id="chatbot"
-      className="py-16 min-h-screen flex items-center bg-gradient-to-br from-primary/10 via-primary/5 to-background"
+      className="min-h-screen flex items-center py-8 bg-muted/30"
     >
-      <div className="container mx-auto px-4 w-full">
-        <div className="max-w-12xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Sparkles className="h-8 w-8 text-primary" />
-              <h2 className="text-3xl md:text-4xl font-bold">AI Assistant</h2>
-            </div>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Chat dengan MuammarBot untuk mengetahui lebih banyak tentang keterampilan, pengalaman, dan proyek-proyek Muammar. Tanyakan apa saja yang ingin Anda ketahui!
-            </p>
-          </div>
-
-          <Card className="w-full mx-auto shadow-2xl bg-background/95 backdrop-blur-sm border-primary/20" ref={outerBoxMessageRef}>
-            <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-primary/20">
+      <div className="container mx-auto px-4 w-full h-full">
+        <div className="w-full h-full">
+          <Card className="w-full mx-auto shadow-lg bg-background border h-[calc(100vh-4rem)]" ref={outerBoxMessageRef}>
+            <CardHeader className="border-b py-3">
               <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-lg">
                   <Bot className="h-5 w-5 text-primary" />
                   MuammarBot
                 </CardTitle>
                 <div className="flex items-center gap-4">
                   <span className="text-xs text-muted-foreground">
-                    Sisa pesan: {isLoading ? '...' : `${remainingMessages}/15`}
+                    {isLoading ? '...' : `${remainingMessages}/15`}
                   </span>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={clearChat}
                     className="text-muted-foreground hover:text-destructive"
                     title="Hapus Riwayat Chat"
@@ -384,18 +376,16 @@ export function Chatbot() {
                   </Button>
                 </div>
               </div>
-              <CardDescription>Powered by Gemini AI • Tanyakan tentang keterampilan, proyek, atau pengalaman</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 p-6">
+            <CardContent className="flex flex-col p-4 h-[calc(100%-4rem)]">
               {/* Quick Questions */}
-              <div>
-                <p className="text-sm text-muted-foreground mb-3">Pertanyaan cepat:</p>
+              <div className="mb-4">
                 <div className="flex flex-wrap gap-2">
                   {quickQuestions.map((question, index) => (
                     <Badge
                       key={index}
                       variant="outline"
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-200 text-sm py-1 px-3 border-primary/30"
+                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors text-xs py-1 px-2"
                       onClick={() => handleQuickQuestion(question)}
                     >
                       {question}
@@ -405,7 +395,7 @@ export function Chatbot() {
               </div>
 
               {/* Messages */}
-              <div className="h-[500px] overflow-y-auto p-6 border rounded-lg bg-gradient-to-b from-muted/20 to-muted/10 border-primary/20"
+              <div className="flex-1 overflow-y-auto p-4 border rounded-lg bg-muted/20 mb-4"
               ref={boxMessageRef}>
                 {isLoading ? (
                   <div className="flex items-center justify-center h-full">
@@ -529,42 +519,37 @@ export function Chatbot() {
               </div>
 
               {/* Input Form */}
-              <div className="space-y-3">
-                <form onSubmit={handleSubmit} className="flex gap-3">
+              <div className="space-y-2">
+                <form onSubmit={handleSubmit} className="flex gap-2">
                   <Input
                     ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyPress}
                     placeholder="Tanyakan tentang Muammar..."
-                    className="flex-1 h-12 text-base bg-background/80 border-primary/30 focus:border-primary"
+                    className="flex-1 h-10 text-sm"
                     disabled={isTyping || isLoading}
                   />
                   {isError ? (
-                    <Button 
-                      type="button" 
-                      size="lg" 
+                    <Button
+                      type="button"
+                      size="default"
                       onClick={handleRetry}
-                      disabled={isTyping || isLoading} 
-                      className="shadow-lg bg-amber-500 hover:bg-amber-600"
+                      disabled={isTyping || isLoading}
+                      className="bg-amber-500 hover:bg-amber-600"
                     >
                       <RefreshCw className="h-4 w-4" />
                     </Button>
                   ) : (
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      disabled={isTyping || !input.trim() || isLoading} 
-                      className="shadow-lg"
+                    <Button
+                      type="submit"
+                      size="default"
+                      disabled={isTyping || !input.trim() || isLoading}
                     >
                       <Send className="h-4 w-4" />
                     </Button>
                   )}
                 </form>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  Chatbot ini didukung oleh Google Gemini AI. Batas 15 pesan per hari per IP address.
-                </p>
               </div>
             </CardContent>
           </Card>
