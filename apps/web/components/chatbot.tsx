@@ -21,6 +21,9 @@ interface Message {
 const COOKIE_NAME = 'muammar_chat_history';
 const COOKIE_EXPIRY = 7; // days
 
+// API URL - uses environment variable or falls back to relative path
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+
 // Hardcoded responses for when quota is exceeded
 const HARDCODED_RESPONSES = [
   "Halo! Saya MuammarBot. Saat ini kuota API telah habis, tetapi saya masih bisa memberikan informasi umum tentang Muammar. Muammar adalah seorang fullstack developer dan cloud engineer dengan keahlian di Vue.js, Next.js, Laravel, dan deployment di cloud.",
@@ -73,7 +76,9 @@ export function Chatbot() {
       
       // Fetch remaining message count from API
       try {
-        const response = await fetch('/api/chat');
+        const response = await fetch(`${API_URL}/api/chat`, {
+          credentials: 'include',
+        });
         if (response.ok) {
           const data = await response.json();
           setRemainingMessages(data.remaining);
@@ -194,11 +199,12 @@ export function Chatbot() {
 
     try {
       // Send the message to our API
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
 
@@ -267,11 +273,12 @@ export function Chatbot() {
     
     try {
       // Send the message to our API
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ messages: newMessages }),
       });
 

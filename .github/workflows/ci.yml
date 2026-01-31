@@ -1,19 +1,17 @@
-name: Deploy All to Cloudflare
+name: CI
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
-  workflow_dispatch:
-
-concurrency:
-  group: "cloudflare-deploy"
-  cancel-in-progress: false
 
 jobs:
-  deploy-api:
+  lint-and-typecheck:
     runs-on: ubuntu-latest
-    name: Deploy API to Workers
+    name: Lint & Type Check
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,23 +30,47 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Deploy API to Cloudflare Workers
+      - name: Lint frontend
+        run: pnpm --filter @muammar/web lint
+
+      - name: Type check frontend
+        run: pnpm --filter @muammar/web tsc --noEmit
+
+      - name: Type check backend
+        run: pnpm --filter @muammar/api tsc --noEmit
+
+  build-api:
+    runs-on: ubuntu-latest
+    name: Build API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Dry run deploy (validate wrangler config)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: apps/api
-          secrets: |
-            GEMINI_API_KEY
-            ADMIN_SECRET_KEY
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          ADMIN_SECRET_KEY: ${{ secrets.ADMIN_SECRET_KEY }}
+          command: deploy --dry-run
 
-  deploy-web:
+  build-web:
     runs-on: ubuntu-latest
-    name: Deploy Web to Pages
-    needs: deploy-api
+    name: Build Web
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -78,13 +100,5 @@ jobs:
       - name: Build with OpenNext
         run: pnpm --filter @muammar/web build:worker
         env:
-          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: apps/web
-          command: pages deploy .open-next/assets --project-name=muammar
+          NEXT_PUBLIC_API_URL: https://muammar-api.apel.workers.dev
+          NEXT_PUBLIC_SITE_URL: https://muammar.pages.dev
