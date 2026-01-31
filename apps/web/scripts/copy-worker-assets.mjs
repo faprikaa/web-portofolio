@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.join(__dirname, '..'); // Assuming script is in apps/web/scripts
+const projectRoot = path.join(__dirname, '..');
 
 const sourceDir = path.join(projectRoot, '.open-next');
 const destDir = path.join(sourceDir, 'assets');
@@ -20,14 +20,12 @@ function copyDir(src, dest) {
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
 
-    // Skip the assets directory itself to avoid infinite recursion
+    // Skip the assets directory itself
     if (entry.name === 'assets') continue;
 
     if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
     } else if (entry.isSymbolicLink()) {
-      // Handle symlinks by copying the real file/directory they point to or skipping
-      // For deployment, usually copying the content is safer than preserving symlinks if the target might be outside
       try {
         const realPath = fs.realpathSync(srcPath);
         const stats = fs.statSync(realPath);
@@ -45,12 +43,16 @@ function copyDir(src, dest) {
   }
 }
 
-// 1. Copy worker.js to _worker.js
+// 1. Prepare _worker.js content (handling rename of .build to __build)
 const workerSrc = path.join(sourceDir, 'worker.js');
 const workerDest = path.join(destDir, '_worker.js');
+
 if (fs.existsSync(workerSrc)) {
-    fs.copyFileSync(workerSrc, workerDest);
-    console.log(`Copied worker.js to ${workerDest}`);
+    let content = fs.readFileSync(workerSrc, 'utf8');
+    // Replace .build imports with __build to avoid dotfile ignore issues in Wrangler
+    content = content.replaceAll('./.build/', './__build/');
+    fs.writeFileSync(workerDest, content);
+    console.log(`Copied and patched worker.js to ${workerDest}`);
 } else {
     console.error('worker.js not found in .open-next/');
     process.exit(1);
@@ -58,21 +60,21 @@ if (fs.existsSync(workerSrc)) {
 
 // 2. Directories to copy
 const dirsToCopy = [
-    'cloudflare',
-    'middleware',
-    'server-functions',
-    '.build', 
+    { name: 'cloudflare', dest: 'cloudflare' },
+    { name: 'middleware', dest: 'middleware' },
+    { name: 'server-functions', dest: 'server-functions' },
+    { name: '.build', dest: '__build' }, // Rename .build to __build
 ];
 
-dirsToCopy.forEach(dirName => {
-    const src = path.join(sourceDir, dirName);
-    const dest = path.join(destDir, dirName);
+dirsToCopy.forEach(({ name, dest }) => {
+    const src = path.join(sourceDir, name);
+    const destination = path.join(destDir, dest);
     
     if (fs.existsSync(src)) {
-        console.log(`Copying ${dirName}...`);
-        copyDir(src, dest);
+        console.log(`Copying ${name} to ${dest}...`);
+        copyDir(src, destination);
     } else {
-        console.warn(`Warning: Directory ${dirName} not found in .open-next/`);
+        console.warn(`Warning: Directory ${name} not found in .open-next/`);
     }
 });
 
