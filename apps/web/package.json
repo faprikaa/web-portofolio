@@ -72,7 +72,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^0.6.0",
+    "@opennextjs/cloudflare": "^1.16.1",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.16.0",
     "@types/react": "^19",
