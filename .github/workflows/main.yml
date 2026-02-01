@@ -74,42 +74,31 @@ jobs:
         run: |
           # Check if KV namespace IDs are placeholders
           if grep -q "YOUR_KV_NAMESPACE_ID" wrangler.jsonc; then
-            echo "⚠️  KV namespaces not configured. Attempting to create..."
+            echo "⚠️  KV namespaces not configured. Checking for existing namespaces..."
             
-            # Create production KV namespace
-            echo "Creating production namespace..."
-            if PROD_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV 2>&1); then
-              echo "✅ Production namespace created"
-              echo "$PROD_OUTPUT"
-              PROD_ID=$(echo "$PROD_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || echo "")
-            else
-              echo "⚠️  Failed to create production namespace (might already exist)"
-              echo "$PROD_OUTPUT"
-            fi
+            # List existing KV namespaces
+            echo "Listing existing KV namespaces..."
+            NAMESPACE_LIST=$(npx wrangler kv namespace list 2>&1)
+            echo "$NAMESPACE_LIST"
             
-            # Create preview KV namespace  
-            echo "Creating preview namespace..."
-            if PREVIEW_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV --preview 2>&1); then
-              echo "✅ Preview namespace created"
-              echo "$PREVIEW_OUTPUT"
-              PREVIEW_ID=$(echo "$PREVIEW_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || echo "")
-            else
-              echo "⚠️  Failed to create preview namespace (might already exist)"
-              echo "$PREVIEW_OUTPUT"
-            fi
+            # Extract RATE_LIMIT_KV namespace ID
+            PROD_ID=$(echo "$NAMESPACE_LIST" | grep -oP '"title":\s*"RATE_LIMIT_KV".*?"id":\s*"\K[^"]+' || echo "")
+            PREVIEW_ID=$(echo "$NAMESPACE_LIST" | grep -oP '"title":\s*"RATE_LIMIT_KV_preview".*?"id":\s*"\K[^"]+' || echo "")
             
-            echo "Production KV ID: ${PROD_ID:-not found}"
-            echo "Preview KV ID: ${PREVIEW_ID:-not found}"
+            echo "Found Production KV ID: ${PROD_ID:-not found}"
+            echo "Found Preview KV ID: ${PREVIEW_ID:-not found}"
             
-            # Try to update if IDs found
+            # Update wrangler.jsonc if IDs found
             if [ -n "$PROD_ID" ] && [ -n "$PREVIEW_ID" ]; then
               sed -i "s/YOUR_KV_NAMESPACE_ID/$PROD_ID/g" wrangler.jsonc
               sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/$PREVIEW_ID/g" wrangler.jsonc
-              echo "✅ wrangler.jsonc updated with KV IDs"
+              echo "✅ wrangler.jsonc updated with existing KV namespace IDs"
+              cat wrangler.jsonc
             else
-              echo "⚠️  Could not extract KV IDs - will attempt deploy anyway"
-              echo "Note: If KV namespaces already exist, update wrangler.jsonc manually with:"
-              echo "  npx wrangler kv namespace list"
+              echo "❌ Could not find existing KV namespaces. Please create them manually:"
+              echo "  npx wrangler kv namespace create RATE_LIMIT_KV"
+              echo "  npx wrangler kv namespace create RATE_LIMIT_KV --preview"
+              exit 1
             fi
           else
             echo "✅ KV namespaces already configured in wrangler.jsonc"
