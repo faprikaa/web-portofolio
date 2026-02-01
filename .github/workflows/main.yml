@@ -74,38 +74,45 @@ jobs:
         run: |
           # Check if KV namespace IDs are placeholders
           if grep -q "YOUR_KV_NAMESPACE_ID" wrangler.jsonc; then
-            echo "Creating KV namespaces..."
+            echo "⚠️  KV namespaces not configured. Attempting to create..."
             
             # Create production KV namespace
             echo "Creating production namespace..."
-            PROD_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV 2>&1)
-            echo "Production output:"
-            echo "$PROD_OUTPUT"
-            PROD_ID=$(echo "$PROD_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || true)
+            if PROD_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV 2>&1); then
+              echo "✅ Production namespace created"
+              echo "$PROD_OUTPUT"
+              PROD_ID=$(echo "$PROD_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || echo "")
+            else
+              echo "⚠️  Failed to create production namespace (might already exist)"
+              echo "$PROD_OUTPUT"
+            fi
             
             # Create preview KV namespace  
             echo "Creating preview namespace..."
-            PREVIEW_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV --preview 2>&1)
-            echo "Preview output:"
-            echo "$PREVIEW_OUTPUT"
-            PREVIEW_ID=$(echo "$PREVIEW_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || true)
+            if PREVIEW_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV --preview 2>&1); then
+              echo "✅ Preview namespace created"
+              echo "$PREVIEW_OUTPUT"
+              PREVIEW_ID=$(echo "$PREVIEW_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || echo "")
+            else
+              echo "⚠️  Failed to create preview namespace (might already exist)"
+              echo "$PREVIEW_OUTPUT"
+            fi
             
-            echo "Production KV ID: $PROD_ID"
-            echo "Preview KV ID: $PREVIEW_ID"
+            echo "Production KV ID: ${PROD_ID:-not found}"
+            echo "Preview KV ID: ${PREVIEW_ID:-not found}"
             
+            # Try to update if IDs found
             if [ -n "$PROD_ID" ] && [ -n "$PREVIEW_ID" ]; then
-              # Update wrangler.jsonc with actual IDs
               sed -i "s/YOUR_KV_NAMESPACE_ID/$PROD_ID/g" wrangler.jsonc
               sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/$PREVIEW_ID/g" wrangler.jsonc
-              echo "✅ KV namespaces created and wrangler.jsonc updated"
-              echo "prod_id=$PROD_ID" >> $GITHUB_OUTPUT
-              echo "preview_id=$PREVIEW_ID" >> $GITHUB_OUTPUT
+              echo "✅ wrangler.jsonc updated with KV IDs"
             else
-              echo "❌ Failed to extract KV namespace IDs"
-              echo "This might be expected if namespaces already exist. Continuing..."
+              echo "⚠️  Could not extract KV IDs - will attempt deploy anyway"
+              echo "Note: If KV namespaces already exist, update wrangler.jsonc manually with:"
+              echo "  npx wrangler kv namespace list"
             fi
           else
-            echo "✅ KV namespaces already configured"
+            echo "✅ KV namespaces already configured in wrangler.jsonc"
           fi
 
       - name: Deploy to Cloudflare Workers
