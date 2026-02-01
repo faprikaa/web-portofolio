@@ -51,6 +51,23 @@ if (fs.existsSync(workerSrc)) {
     let content = fs.readFileSync(workerSrc, 'utf8');
     // Replace .build imports with __build to avoid dotfile ignore issues in Wrangler
     content = content.replaceAll('./.build/', './__build/');
+    
+    // Add static asset serving logic before middleware handler
+    // Insert after the image handling block and before middleware handler
+    const staticAssetHandler = `
+            // Serve static assets (_next/static/*)
+            if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/_next/data/")) {
+                return env.ASSETS?.fetch(request) || new Response("Not Found", { status: 404 });
+            }
+`;
+    
+    // Find the line with "// - \`Request\`s are handled by the Next server"
+    // and insert static handler before it
+    content = content.replace(
+        /(\s+)\/\/ - `Request`s are handled by the Next server/,
+        `${staticAssetHandler}$1// - \`Request\`s are handled by the Next server`
+    );
+    
     fs.writeFileSync(workerDest, content);
     console.log(`Copied and patched worker.js to ${workerDest}`);
 } else {
