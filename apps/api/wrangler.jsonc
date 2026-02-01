@@ -7,8 +7,8 @@
   "kv_namespaces": [
     {
       "binding": "RATE_LIMIT_KV",
-      "id": "YOUR_KV_NAMESPACE_ID",
-      "preview_id": "YOUR_PREVIEW_KV_NAMESPACE_ID"
+      "id": "5c41f4bc32e1430ab6c7b6c005502952",
+      "preview_id": "d98767645ab541a28c8c1cf273b27a74"
     }
   ],
   "vars": {
