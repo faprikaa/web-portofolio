@@ -51,10 +51,10 @@ export function About() {
                 My journey began with curiosity about how apps work. Over time, that curiosity turned into a strong passion for software development — from backend systems to sleek frontends.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                My expertise spans across modern web technologies, cloud platforms, and mobile development. I'm always eager to learn new technologies and best practices.
+                My expertise spans across modern web technologies, cloud platforms, and mobile development. I&apos;m always eager to learn new technologies and best practices.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                When I'm not coding, you can find me contributing to open source projects, writing technical blogs, or exploring the latest in tech.
+                When I&apos;m not coding, you can find me contributing to open source projects, writing technical blogs, or exploring the latest in tech.
               </p>
 
               {/* Stats */}
