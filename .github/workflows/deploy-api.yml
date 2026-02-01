@@ -41,20 +41,18 @@ jobs:
             echo "Creating KV namespaces..."
             
             # Create production KV namespace
-            PROD_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV --env production 2>&1)
-            PROD_ID=$(echo "$PROD_OUTPUT" | grep -oP 'id = "\K[^"]+' || true)
+            echo "Creating production namespace..."
+            PROD_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV 2>&1)
+            echo "Production output:"
+            echo "$PROD_OUTPUT"
+            PROD_ID=$(echo "$PROD_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PROD_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || true)
             
-            # Create preview KV namespace
-            PREVIEW_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV --env preview 2>&1)
-            PREVIEW_ID=$(echo "$PREVIEW_OUTPUT" | grep -oP 'id = "\K[^"]+' || true)
-            
-            # If IDs are empty, try alternative parsing
-            if [ -z "$PROD_ID" ]; then
-              PROD_ID=$(echo "$PROD_OUTPUT" | grep -oP 'namespace-id: \K\w+' || true)
-            fi
-            if [ -z "$PREVIEW_ID" ]; then
-              PREVIEW_ID=$(echo "$PREVIEW_OUTPUT" | grep -oP 'namespace-id: \K\w+' || true)
-            fi
+            # Create preview KV namespace  
+            echo "Creating preview namespace..."
+            PREVIEW_OUTPUT=$(npx wrangler kv namespace create RATE_LIMIT_KV --preview 2>&1)
+            echo "Preview output:"
+            echo "$PREVIEW_OUTPUT"
+            PREVIEW_ID=$(echo "$PREVIEW_OUTPUT" | grep -oP 'id = "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP 'id: "\K[^"]+' || echo "$PREVIEW_OUTPUT" | grep -oP '\b[0-9a-f]{32}\b' | head -1 || true)
             
             echo "Production KV ID: $PROD_ID"
             echo "Preview KV ID: $PREVIEW_ID"

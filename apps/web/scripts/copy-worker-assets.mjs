@@ -55,8 +55,11 @@ if (fs.existsSync(workerSrc)) {
     // Add static asset serving logic before middleware handler
     // Insert after the image handling block and before middleware handler
     const staticAssetHandler = `
-            // Serve static assets (_next/static/*)
-            if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/_next/data/")) {
+            // Serve static assets (_next/static/*, /image-projects/*, /documents/*)
+            if (url.pathname.startsWith("/_next/static/") || 
+                url.pathname.startsWith("/_next/data/") ||
+                url.pathname.startsWith("/image-projects/") ||
+                url.pathname.startsWith("/documents/")) {
                 return env.ASSETS?.fetch(request) || new Response("Not Found", { status: 404 });
             }
 `;
